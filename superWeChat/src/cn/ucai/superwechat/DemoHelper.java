@@ -30,7 +30,7 @@ import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
 
-import cn.ucai.superwechat.db.DemoDBManager;
+import cn.ucai.superwechat.db.superwechatDBManager;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.EmojiconExampleGroupData;
@@ -94,7 +94,7 @@ public class DemoHelper {
 
 	private static DemoHelper instance = null;
 	
-	private DemoModel demoModel = null;
+	private superwechatModel demoModel = null;
 	
 	/**
      * sync groups status listener
@@ -149,7 +149,7 @@ public class DemoHelper {
 	 *            application context
 	 */
 	public void init(Context context) {
-	    demoModel = new DemoModel(context);
+	    demoModel = new superwechatModel(context);
 	    EMOptions options = initChatOptions();
 	    //use default options if options is null
 		if (EaseUI.getInstance().init(context, options)) {
@@ -963,8 +963,8 @@ public class DemoHelper {
 	    return easeUI.getNotifier();
 	}
 	
-	public DemoModel getModel(){
-        return (DemoModel) demoModel;
+	public superwechatModel getModel(){
+        return (superwechatModel) demoModel;
     }
 	
 	/**
@@ -1354,7 +1354,7 @@ public class DemoHelper {
         setContactList(null);
         setRobotList(null);
         getUserProfileManager().reset();
-        DemoDBManager.getInstance().closeDB();
+        superwechatDBManager.getInstance().closeDB();
     }
 
     public void pushActivity(Activity activity) {

@@ -39,7 +39,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHelper;
-import cn.ucai.superwechat.DemoModel;
+import cn.ucai.superwechat.superwechatModel;
 import com.hyphenate.chatuidemo.R;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.easeui.widget.EaseSwitchButton;
@@ -118,7 +118,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
     private EaseSwitchButton switch_adaptive_video_encode;
 	private EaseSwitchButton customServerSwitch;
 	private EaseSwitchButton customAppkeySwitch;
-    private DemoModel settingsModel;
+    private superwechatModel settingsModel;
     private EMOptions chatOptions;
 	private EditText edit_custom_appkey;
 	
