@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.hyphenate.easeui.widget.EaseTitleBar
+    <cn.ucai.easeui.widget.EaseTitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
             android:textColor="#fff"
             android:textSize="16sp"
             />
-    </com.hyphenate.easeui.widget.EaseTitleBar>
+    </cn.ucai.easeui.widget.EaseTitleBar>
 
     <!--<View
         android:layout_width="match_parent"

@@ -64,7 +64,7 @@
                 android:textSize="18sp"
                 android:typeface="serif" />
 
-            <com.hyphenate.easeui.widget.EaseExpandGridView
+            <cn.ucai.easeui.widget.EaseExpandGridView
                 android:id="@+id/owner_and_administrators"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                 android:textSize="18sp"
                 android:typeface="serif" />
 
-            <com.hyphenate.easeui.widget.EaseExpandGridView
+            <cn.ucai.easeui.widget.EaseExpandGridView
                 android:id="@+id/gridview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

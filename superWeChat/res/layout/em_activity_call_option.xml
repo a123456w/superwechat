@@ -220,7 +220,7 @@
                 android:textSize="14sp"
                 android:typeface="serif" />
 
-            <com.hyphenate.easeui.widget.EaseSwitchButton
+            <cn.ucai.easeui.widget.EaseSwitchButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/switch_fix_video_resolution"
@@ -252,7 +252,7 @@
                 android:textSize="14sp"
                 android:typeface="serif" />
 
-            <com.hyphenate.easeui.widget.EaseSwitchButton
+            <cn.ucai.easeui.widget.EaseSwitchButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/switch_offline_call_push"
