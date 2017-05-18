@@ -24,7 +24,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.hyphenate.chatuidemo"
+        applicationId "com.hyphenate.superwechat"
         minSdkVersion 11
         targetSdkVersion 25
         multiDexEnabled true
