@@ -56,12 +56,12 @@
             android:windowSoftInputMode="adjustResize"
             />
         <activity 
-            android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
+            android:name="cn.ucai.easeui.ui.EaseBaiduMapActivity"
             android:screenOrientation="portrait"
             />
         
         <activity 
-            android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
+            android:name="cn.ucai.easeui.ui.EaseShowBigImageActivity"
             android:screenOrientation="portrait"
             />
 
