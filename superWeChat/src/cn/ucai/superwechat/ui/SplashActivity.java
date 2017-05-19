@@ -52,7 +52,6 @@ public class SplashActivity extends BaseActivity {
                     } else {
                         //enter main screen
                         MFGT.gotoMain(SplashActivity.this);
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     }
                     finish();
                 } else {
@@ -61,7 +60,6 @@ public class SplashActivity extends BaseActivity {
                     } catch (InterruptedException e) {
                     }
                     MFGT.gotoLogin(SplashActivity.this);
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                 }
             }
