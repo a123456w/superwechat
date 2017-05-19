@@ -60,6 +60,7 @@ public class SplashActivity extends BaseActivity {
                     } catch (InterruptedException e) {
                     }
                     MFGT.gotoLogin(SplashActivity.this);
+                    MFGT.gotoGuide(SplashActivity.this);
                     finish();
                 }
             }

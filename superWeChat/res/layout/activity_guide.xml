@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black2">
+
+
+    <ImageView
+        android:id="@+id/iv_splash_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher" />
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/icon_btn_login"
+        android:layout_centerInParent="true"/>
+    <View
+        android:id="@+id/v"
+        android:layout_width="match_parent"
+        android:layout_below="@id/btn_login"
+        android:layout_height="20dp"/>
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/icon_btn_register"
+        android:layout_below="@id/v"
+        android:layout_centerHorizontal="true"/>
+
+
+
+</RelativeLayout>

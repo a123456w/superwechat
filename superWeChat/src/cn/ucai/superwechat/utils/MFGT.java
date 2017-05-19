@@ -3,6 +3,7 @@ package cn.ucai.superwechat.utils;
 import android.content.Context;
 import android.content.Intent;
 
+import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.SplashActivity;
@@ -18,7 +19,7 @@ public class MFGT {
     }
 
     public static void gotoMain(Context context) {
-        context.startActivity(new Intent(context,MainActivity.class));
+        startActivity(context,MainActivity.class);
     }
 
 
@@ -26,5 +27,9 @@ public class MFGT {
 
     private static void startActivity(Context context, Class clazz) {
         context.startActivity(new Intent(context,clazz));
+    }
+
+    public static void gotoGuide(Context context) {
+       startActivity(context,GuideActivity.class);
     }
 }
