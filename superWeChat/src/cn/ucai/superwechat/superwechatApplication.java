@@ -29,10 +29,10 @@ import com.hyphenate.chat.EMClient;
 import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.easeui.utils.EaseUserUtils;
 
-public class superwechatApplication extends Application {
+public class SuperWeChatApplication extends Application {
 
     public static Context applicationContext;
-    private static superwechatApplication instance;
+    private static SuperWeChatApplication instance;
     // login user name
     public final String PREF_USERNAME = "username";
 
@@ -85,7 +85,7 @@ public class superwechatApplication extends Application {
         //end of red packet code
     }
 
-    public static superwechatApplication getInstance() {
+    public static SuperWeChatApplication getInstance() {
         return instance;
     }
 

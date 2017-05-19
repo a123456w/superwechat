@@ -32,7 +32,7 @@ import android.widget.Toast;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 
-import cn.ucai.superwechat.superwechatApplication;
+import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.DemoHelper;
 
 import cn.ucai.superwechat.R;
@@ -163,7 +163,7 @@ public class LoginActivity extends BaseActivity {
 
                 // update current user's display name for APNs
                 boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
-                        superwechatApplication.currentUserNick.trim());
+                        SuperWeChatApplication.currentUserNick.trim());
                 if (!updatenick) {
                     Log.e("LoginActivity", "update current user nick fail");
                 }
