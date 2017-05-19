@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ededed" >
+        android:background="#ededed">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
             android:paddingBottom="7dp"
             android:paddingLeft="@dimen/padding_search_bar"
             android:paddingRight="7dp"
-            android:paddingTop="7dp" >
+            android:paddingTop="7dp">
 
             <EditText
                 android:id="@+id/query"
@@ -36,7 +36,7 @@
                 android:focusableInTouchMode="true"
                 android:singleLine="true"
                 android:imeOptions="actionSearch"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <ImageButton
                 android:id="@+id/search_clear"
@@ -66,7 +66,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_search"
@@ -84,17 +84,16 @@
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="#00000000"
-             />
-        
+            android:cacheColorHint="#00000000" />
+
         <TextView
-        android:id="@+id/tv_no_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
-        android:visibility="invisible"
-        android:text="No result"
+            android:id="@+id/tv_no_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
+            android:text="No result"
             tools:ignore="HardcodedText" />
     </FrameLayout>
 

@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.R;
+import cn.ucai.superwechat.R;
+
 import cn.ucai.easeui.utils.EaseUserUtils;
+
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.Collections;
@@ -25,60 +27,59 @@ import java.util.List;
 
 /**
  * Blacklist screen
- * 
  */
 public class BlacklistActivity extends BaseActivity {
-	private BlacklistAdapter adapter;
+    private BlacklistAdapter adapter;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.em_activity_black_list);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.em_activity_black_list);
 
-		ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) findViewById(R.id.list);
 
-		// get blacklist from local databases
-		 List<String> blacklist = EMClient.getInstance().contactManager().getBlackListUsernames();
+        // get blacklist from local databases
+        List<String> blacklist = EMClient.getInstance().contactManager().getBlackListUsernames();
 
-		// show the blacklist
-		if (blacklist != null) {
-			Collections.sort(blacklist);
-			adapter = new BlacklistAdapter(this, blacklist);
-			listView.setAdapter(adapter);
-		}
+        // show the blacklist
+        if (blacklist != null) {
+            Collections.sort(blacklist);
+            adapter = new BlacklistAdapter(this, blacklist);
+            listView.setAdapter(adapter);
+        }
 
-		registerForContextMenu(listView);
+        registerForContextMenu(listView);
 
-	}
+    }
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		getMenuInflater().inflate(R.menu.em_remove_from_blacklist, menu);
-	}
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.em_remove_from_blacklist, menu);
+    }
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.remove) {
-			final String tobeRemoveUser = adapter.getItem(((AdapterContextMenuInfo) item.getMenuInfo()).position);
-			// remove user out from blacklist
-			removeOutBlacklist(tobeRemoveUser);
-			return true;
-		}
-		return super.onContextItemSelected(item);
-	}
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.remove) {
+            final String tobeRemoveUser = adapter.getItem(((AdapterContextMenuInfo) item.getMenuInfo()).position);
+            // remove user out from blacklist
+            removeOutBlacklist(tobeRemoveUser);
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 
-	/**
-	 * remove user out from blacklist
-	 * 
-	 * @param tobeRemoveUser
-	 */
-	void removeOutBlacklist(final String tobeRemoveUser) {
-	    final ProgressDialog pd = new ProgressDialog(this);
-	    pd.setMessage(getString(R.string.be_removing));
-	    pd.setCanceledOnTouchOutside(false);
-	    pd.show();
-	    new Thread(new Runnable() {
+    /**
+     * remove user out from blacklist
+     *
+     * @param tobeRemoveUser
+     */
+    void removeOutBlacklist(final String tobeRemoveUser) {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage(getString(R.string.be_removing));
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        new Thread(new Runnable() {
             public void run() {
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(tobeRemoveUser);
@@ -99,35 +100,34 @@ public class BlacklistActivity extends BaseActivity {
                 }
             }
         }).start();
-	}
+    }
 
-	public void toGroupDetails(View view) {
-	}
+    public void toGroupDetails(View view) {
+    }
 
-	/**
-	 * adapter
-	 * 
-	 */
-	private class BlacklistAdapter extends ArrayAdapter<String> {
+    /**
+     * adapter
+     */
+    private class BlacklistAdapter extends ArrayAdapter<String> {
 
-		public BlacklistAdapter(Context context, List<String> objects) {
-			super(context, 0, objects);
-		}
+        public BlacklistAdapter(Context context, List<String> objects) {
+            super(context, 0, objects);
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = View.inflate(getContext(), R.layout.ease_row_contact, null);
-			}
-			String username = getItem(position);
-			TextView name = (TextView) convertView.findViewById(R.id.name);
-			ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
-			
-			EaseUserUtils.setUserAvatar(getContext(), username, avatar);
-			EaseUserUtils.setUserNick(username, name);
-			
-			return convertView;
-		}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = View.inflate(getContext(), R.layout.ease_row_contact, null);
+            }
+            String username = getItem(position);
+            TextView name = (TextView) convertView.findViewById(R.id.name);
+            ImageView avatar = (ImageView) convertView.findViewById(R.id.avatar);
 
-	}
+            EaseUserUtils.setUserAvatar(getContext(), username, avatar);
+            EaseUserUtils.setUserNick(username, name);
+
+            return convertView;
+        }
+
+    }
 }

@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
         android:background="@color/top_bar_normal_bg"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical">
 
         <LinearLayout
             android:layout_width="45dp"
             android:layout_height="match_parent"
             android:background="@drawable/ease_common_tab_bg"
-            android:onClick="back" >
+            android:onClick="back">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -45,13 +46,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f2f0eb" >
+        android:background="#f2f0eb">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -117,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_group_id"
@@ -146,15 +147,16 @@
                     android:layout_marginRight="10dip"
                     android:background="#E6E6E6" />
             </RelativeLayout>
-			<RelativeLayout
+
+            <RelativeLayout
                 android:id="@+id/rl_group_nick"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <TextView
-                	android:id="@+id/tv_group_nick"
+                    android:id="@+id/tv_group_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -163,16 +165,15 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:typeface="serif" />
-                
-                  <TextView 
+
+                <TextView
                     android:id="@+id/tv_group_nick_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_group_nick"
                     android:layout_marginLeft="10dp"
-                    android:textSize="18sp"
-                    /> 
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -182,15 +183,16 @@
                     android:layout_marginRight="10dip"
                     android:background="#E6E6E6" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_group_owner"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:background="@drawable/em_btn_bottom_selector"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <TextView
-                	android:id="@+id/tv_group_owner"
+                    android:id="@+id/tv_group_owner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -199,16 +201,15 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:typeface="serif" />
-                
-                  <TextView 
+
+                <TextView
                     android:id="@+id/tv_group_owner_value"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/tv_group_owner"
                     android:layout_marginLeft="10dp"
-                    android:textSize="18sp"
-                    /> 
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -218,11 +219,12 @@
                     android:layout_marginRight="10dip"
                     android:background="#E6E6E6" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/clear_all_history"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/em_btn_bottom_selector" >
+                android:background="@drawable/em_btn_bottom_selector">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -248,7 +250,7 @@
                 android:id="@+id/rl_change_group_name"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/em_btn_bottom_selector" >
+                android:background="@drawable/em_btn_bottom_selector">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -274,7 +276,7 @@
                 android:id="@+id/rl_change_group_description"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/em_btn_bottom_selector" >
+                android:background="@drawable/em_btn_bottom_selector">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -362,11 +364,11 @@
                 android:layout_marginRight="10dip"
                 android:background="#E6E6E6" />
 
-             <RelativeLayout
+            <RelativeLayout
                 android:id="@+id/rl_search"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
-                android:background="@drawable/em_btn_bottom_selector" >
+                android:background="@drawable/em_btn_bottom_selector">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -388,7 +390,6 @@
                     android:background="#E6E6E6" />
             </RelativeLayout>
 
-          
 
             <Button
                 android:id="@+id/btn_exit_grp"

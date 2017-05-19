@@ -13,7 +13,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.R;
+import cn.ucai.superwechat.R;
+
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.easeui.widget.EaseSwitchButton;
 
@@ -34,11 +35,13 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
         // EMClient.getInstance().callManager().getOptions().xxx set initial values resident at DemoHelper
 
         // min video kbps
-        EditText editMinBitRate = (EditText)findViewById(R.id.edit_min_bit_rate);
+        EditText editMinBitRate = (EditText) findViewById(R.id.edit_min_bit_rate);
         editMinBitRate.setText("" + PreferenceManager.getInstance().getCallMinVideoKbps());
         editMinBitRate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -48,16 +51,20 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // max video kbps
-        EditText editMaxBitRate = (EditText)findViewById(R.id.edit_max_bit_rate);
+        EditText editMaxBitRate = (EditText) findViewById(R.id.edit_max_bit_rate);
         editMaxBitRate.setText("" + PreferenceManager.getInstance().getCallMaxVideoKbps());
         editMaxBitRate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -67,16 +74,20 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // max frame rate
-        EditText editMaxFrameRate = (EditText)findViewById(R.id.edit_max_frame_rate);
+        EditText editMaxFrameRate = (EditText) findViewById(R.id.edit_max_frame_rate);
         editMaxFrameRate.setText("" + PreferenceManager.getInstance().getCallMaxFrameRate());
         editMaxFrameRate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
@@ -86,8 +97,10 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                     e.printStackTrace();
                 }
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         // audio sample rate
@@ -101,9 +114,9 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
 
 
         // fixed sample rate
-        RelativeLayout rlSwitchSampleRate = (RelativeLayout)findViewById(R.id.rl_switch_fix_video_resolution);
+        RelativeLayout rlSwitchSampleRate = (RelativeLayout) findViewById(R.id.rl_switch_fix_video_resolution);
         rlSwitchSampleRate.setOnClickListener(this);
-        EaseSwitchButton swFixedSampleRate = (EaseSwitchButton)findViewById(R.id.switch_fix_video_resolution);
+        EaseSwitchButton swFixedSampleRate = (EaseSwitchButton) findViewById(R.id.switch_fix_video_resolution);
         if (PreferenceManager.getInstance().isCallFixedVideoResolution()) {
             swFixedSampleRate.openSwitch();
         } else {
@@ -111,9 +124,9 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
         }
 
         // offline call push
-        RelativeLayout rlSwitchOfflineCallPush = (RelativeLayout)findViewById(R.id.rl_switch_offline_call_push);
+        RelativeLayout rlSwitchOfflineCallPush = (RelativeLayout) findViewById(R.id.rl_switch_offline_call_push);
         rlSwitchOfflineCallPush.setOnClickListener(this);
-        EaseSwitchButton swOfflineCallPush = (EaseSwitchButton)findViewById(R.id.switch_offline_call_push);
+        EaseSwitchButton swOfflineCallPush = (EaseSwitchButton) findViewById(R.id.switch_offline_call_push);
         if (PreferenceManager.getInstance().isPushCall()) {
             swOfflineCallPush.openSwitch();
         } else {
@@ -177,14 +190,14 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
             spinnerVideoResolution.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    AtomicBoolean disable = (AtomicBoolean)spinnerVideoResolution.getTag();
+                    AtomicBoolean disable = (AtomicBoolean) spinnerVideoResolution.getTag();
                     if (disable.get() == true) {
                         disable.set(false);
                         return;
                     }
 
                     if (position == 0) {
-                        TextView textVideoResolution = (TextView)findViewById(R.id.text_video_resolution);
+                        TextView textVideoResolution = (TextView) findViewById(R.id.text_video_resolution);
                         textVideoResolution.setText("Set video resolution:" + " Not Set");
 
                         PreferenceManager.getInstance().setCallBackCameraResolution("");
@@ -194,7 +207,7 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                     Camera.Size size = sizes.get(position - 1);
                     if (size != null) {
                         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(size.width, size.height);
-                        TextView textVideoResolution = (TextView)findViewById(R.id.text_video_resolution);
+                        TextView textVideoResolution = (TextView) findViewById(R.id.text_video_resolution);
                         textVideoResolution.setText("Set video resolution:" + size.width + "x" + size.height);
 
                         if (cameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
@@ -221,7 +234,8 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
             });
 
         } catch (Exception e) {
@@ -248,28 +262,29 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
         spinnerAudioSampleRate.setAdapter(adapter);
 
         spinnerAudioSampleRate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-             @Override
-             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 // Not set
-                 if (position == 0) {
-                     return;
-                 }
-                 String audioSampleRate = sampleRateList.get(position);
-                 if (audioSampleRate != null) {
-                     try {
-                         String data = audioSampleRate.substring(0, audioSampleRate.length() - 2);
-                         int hz = new Integer(data).intValue();
-                         EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(hz);
-                         PreferenceManager.getInstance().setCallAudioSampleRate(hz);
-                     } catch (Exception e) {
-                         e.printStackTrace();
-                     }
-                 }
-             }
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Not set
+                if (position == 0) {
+                    return;
+                }
+                String audioSampleRate = sampleRateList.get(position);
+                if (audioSampleRate != null) {
+                    try {
+                        String data = audioSampleRate.substring(0, audioSampleRate.length() - 2);
+                        int hz = new Integer(data).intValue();
+                        EMClient.getInstance().callManager().getCallOptions().setAudioSampleRate(hz);
+                        PreferenceManager.getInstance().setCallAudioSampleRate(hz);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
-             @Override
-             public void onNothingSelected(AdapterView<?> parent) {}
-         });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         // update selection
         int selection = 0;
@@ -294,7 +309,7 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_switch_fix_video_resolution:
-                EaseSwitchButton swFixedVideoResolution = (EaseSwitchButton)findViewById(R.id.switch_fix_video_resolution);
+                EaseSwitchButton swFixedVideoResolution = (EaseSwitchButton) findViewById(R.id.switch_fix_video_resolution);
                 if (swFixedVideoResolution.isSwitchOpen()) {
                     EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(false);
                     swFixedVideoResolution.closeSwitch();
@@ -307,7 +322,7 @@ public class CallOptionActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.rl_switch_offline_call_push:
-                EaseSwitchButton swOfflineCallPush = (EaseSwitchButton)findViewById(R.id.switch_offline_call_push);
+                EaseSwitchButton swOfflineCallPush = (EaseSwitchButton) findViewById(R.id.switch_offline_call_push);
                 if (swOfflineCallPush.isSwitchOpen()) {
                     EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
                     swOfflineCallPush.closeSwitch();

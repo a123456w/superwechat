@@ -23,7 +23,7 @@ import android.widget.ListView;
 
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.DemoHelper;
-import com.hyphenate.chatuidemo.R;
+import cn.ucai.superwechat.R;
 import cn.ucai.easeui.adapter.EaseContactAdapter;
 import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.easeui.widget.EaseSidebar;

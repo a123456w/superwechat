@@ -5,7 +5,7 @@
          It contains the path to the SDK. It should *NOT* be checked into
          Version Control Systems. -->
     <property file="local.properties" />
-    <property name="out.final.file" value="chatdemo-ui.apk"/>
+    <property name="out.final.file" value="chatdemo-ui.apk" />
 
     <!-- The ant.properties file can be created by you. It is only edited by the
          'android' tool to add properties to it.
@@ -51,9 +51,8 @@
 
     <!-- quick check on sdk.dir -->
     <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
-            unless="sdk.dir"
-    />
+        message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
+        unless="sdk.dir" />
 
     <!--
         Import per project custom build rules if present at the root of the project.
@@ -89,9 +88,9 @@
     -->
     <!-- version-tag: 1 -->
     <import file="${sdk.dir}/tools/ant/build.xml" />
-	<target name="proguard-jar">
+    <target name="proguard-jar">
         <java jar="${sdk.dir}/tools/proguard/lib/proguard.jar" fork="true">
-            <arg value="@proguard-project.txt"/>
+            <arg value="@proguard-project.txt" />
         </java>
     </target>
 </project>

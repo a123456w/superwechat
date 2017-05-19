@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import cn.ucai.superwechat.superwechatModel;
-import com.hyphenate.chatuidemo.R;
+
+import cn.ucai.superwechat.R;
+
 import cn.ucai.easeui.widget.EaseTitleBar;
 
 public class SetServersActivity extends BaseActivity {
@@ -27,9 +29,9 @@ public class SetServersActivity extends BaseActivity {
         titleBar = (EaseTitleBar) findViewById(R.id.title_bar);
 
         demoModel = new superwechatModel(this);
-        if(demoModel.getRestServer() != null)
+        if (demoModel.getRestServer() != null)
             restEdit.setText(demoModel.getRestServer());
-        if(demoModel.getIMServer() != null)
+        if (demoModel.getIMServer() != null)
             imEdit.setText(demoModel.getIMServer());
         titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
             @Override
@@ -42,9 +44,9 @@ public class SetServersActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(!TextUtils.isEmpty(restEdit.getText()))
+        if (!TextUtils.isEmpty(restEdit.getText()))
             demoModel.setRestServer(restEdit.getText().toString());
-        if(!TextUtils.isEmpty(imEdit.getText()))
+        if (!TextUtils.isEmpty(imEdit.getText()))
             demoModel.setIMServer(imEdit.getText().toString());
         super.onBackPressed();
     }

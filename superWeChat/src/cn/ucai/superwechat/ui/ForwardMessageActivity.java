@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,26 +16,27 @@ package cn.ucai.superwechat.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.hyphenate.chatuidemo.R;
+import cn.ucai.superwechat.R;
+
 import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.easeui.widget.EaseAlertDialog;
 import cn.ucai.easeui.widget.EaseAlertDialog.AlertDialogUser;
 
 public class ForwardMessageActivity extends PickContactNoCheckboxActivity {
-	private EaseUser selectUser;
-	private String forward_msg_id;
+    private EaseUser selectUser;
+    private String forward_msg_id;
 
-	 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		forward_msg_id = getIntent().getStringExtra("forward_msg_id");
-	}
-	
-	@Override
-	protected void onListItemClick(int position) {
-		selectUser = contactAdapter.getItem(position);
-		new EaseAlertDialog(this, null, getString(R.string.confirm_forward_to, selectUser.getNick()), null, new AlertDialogUser() {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        forward_msg_id = getIntent().getStringExtra("forward_msg_id");
+    }
+
+    @Override
+    protected void onListItemClick(int position) {
+        selectUser = contactAdapter.getItem(position);
+        new EaseAlertDialog(this, null, getString(R.string.confirm_forward_to, selectUser.getNick()), null, new AlertDialogUser() {
             @Override
             public void onResult(boolean confirmed, Bundle bundle) {
                 if (confirmed) {
@@ -54,6 +55,6 @@ public class ForwardMessageActivity extends PickContactNoCheckboxActivity {
                 }
             }
         }, true).show();
-	}
+    }
 
 }

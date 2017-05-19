@@ -3,15 +3,15 @@
     android:id="@+id/list_itease_layout"
     android:layout_width="match_parent"
     android:layout_height="59dp"
-    android:gravity="center_vertical" >
+    android:gravity="center_vertical">
 
- <RelativeLayout
+    <RelativeLayout
         android:id="@+id/avatar_container"
         android:layout_width="59dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentLeft="true">
 
-      <ImageView
+        <ImageView
             android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"

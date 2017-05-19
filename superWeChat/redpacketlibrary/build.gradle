@@ -52,4 +52,5 @@ dependencies {
     //钱包版红包SDK使用下面的远程依赖
     //compile 'com.hyphenate.redpacket:redpacket-wallet:3.4.4'
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.3.1'
 }

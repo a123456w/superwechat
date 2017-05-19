@@ -20,8 +20,10 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.Status;
 import com.hyphenate.chat.EMTextMessageBody;
+
 import cn.ucai.superwechat.Constant;
-import com.hyphenate.chatuidemo.R;
+
+import cn.ucai.superwechat.R;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
@@ -53,21 +55,21 @@ public class CallActivity extends BaseActivity {
     protected EMOppositeSurfaceView oppositeSurface;
     protected boolean isAnswered = false;
     protected int streamID = -1;
-    
+
     EMCallManager.EMCallPushProvider pushProvider;
-    
+
     /**
      * 0：voice call，1：video call
      */
     protected int callType = 0;
-    
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 
         pushProvider = new EMCallManager.EMCallPushProvider() {
-            
+
             void updateMessageText(final EMMessage oldMsg, final String to) {
                 // update local message text
                 EMConversation conv = EMClient.getInstance().chatManager().getConversation(oldMsg.getTo());
@@ -79,14 +81,14 @@ public class CallActivity extends BaseActivity {
 
                 //this function should exposed & move to Demo
                 EMLog.d(TAG, "onRemoteOffline, to:" + to);
-                
-                final EMMessage message = EMMessage.createTxtSendMessage("You have an incoming call", to);         
+
+                final EMMessage message = EMMessage.createTxtSendMessage("You have an incoming call", to);
                 // set the user-defined extension field
                 message.setAttribute("em_apns_ext", true);
-                
+
                 message.setAttribute("is_voice_call", callType == 0 ? true : false);
-                
-                message.setMessageStatusCallback(new EMCallBack(){
+
+                message.setMessageStatusCallback(new EMCallBack() {
 
                     @Override
                     public void onSuccess() {
@@ -108,10 +110,10 @@ public class CallActivity extends BaseActivity {
                 EMClient.getInstance().chatManager().sendMessage(message);
             }
         };
-        
+
         EMClient.getInstance().callManager().setPushProvider(pushProvider);
     }
-    
+
     @Override
     protected void onDestroy() {
         if (soundPool != null)
@@ -120,10 +122,10 @@ public class CallActivity extends BaseActivity {
             ringtone.stop();
         audioManager.setMode(AudioManager.MODE_NORMAL);
         audioManager.setMicrophoneMute(false);
-        
-        if(callStateListener != null)
+
+        if (callStateListener != null)
             EMClient.getInstance().callManager().removeCallStateChangeListener(callStateListener);
-        
+
         if (pushProvider != null) {
             EMClient.getInstance().callManager().setPushProvider(null);
             pushProvider = null;
@@ -131,7 +133,7 @@ public class CallActivity extends BaseActivity {
         releaseHandler();
         super.onDestroy();
     }
-    
+
     @Override
     public void onBackPressed() {
         EMLog.d(TAG, "onBackPressed");
@@ -140,9 +142,9 @@ public class CallActivity extends BaseActivity {
         finish();
         super.onBackPressed();
     }
-    
+
     Runnable timeoutHangup = new Runnable() {
-        
+
         @Override
         public void run() {
             handler.sendEmptyMessage(MSG_CALL_END);
@@ -150,53 +152,57 @@ public class CallActivity extends BaseActivity {
     };
 
     HandlerThread callHandlerThread = new HandlerThread("callHandlerThread");
-    { callHandlerThread.start(); }
+
+    {
+        callHandlerThread.start();
+    }
+
     protected Handler handler = new Handler(callHandlerThread.getLooper()) {
         @Override
         public void handleMessage(Message msg) {
             EMLog.d("EMCallManager CallActivity", "handleMessage ---enter block--- msg.what:" + msg.what);
             switch (msg.what) {
-            case MSG_CALL_MAKE_VIDEO:
-            case MSG_CALL_MAKE_VOICE:
-                try {
-                    if (msg.what == MSG_CALL_MAKE_VIDEO) {
-                        EMClient.getInstance().callManager().makeVideoCall(username);
-                    } else { 
-                        EMClient.getInstance().callManager().makeVoiceCall(username);
-                    }
-                } catch (final EMServiceNotReadyException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        public void run() {                            
-                            String st2 = e.getMessage();
-                            if (e.getErrorCode() == EMError.CALL_REMOTE_OFFLINE) {
-                                st2 = getResources().getString(R.string.The_other_is_not_online);
-                            } else if (e.getErrorCode() == EMError.USER_NOT_LOGIN) {
-                                st2 = getResources().getString(R.string.Is_not_yet_connected_to_the_server);
-                            } else if (e.getErrorCode() == EMError.INVALID_USER_NAME) {
-                                st2 = getResources().getString(R.string.illegal_user_name);
-                            } else if (e.getErrorCode() == EMError.CALL_BUSY) {
-                                st2 = getResources().getString(R.string.The_other_is_on_the_phone);
-                            } else if (e.getErrorCode() == EMError.NETWORK_ERROR) {
-                                st2 = getResources().getString(R.string.can_not_connect_chat_server_connection);
-                            }
-                            Toast.makeText(CallActivity.this, st2, Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-                }
-                break;
-            case MSG_CALL_ANSWER:
-                EMLog.d(TAG, "MSG_CALL_ANSWER");
-                if (ringtone != null)
-                    ringtone.stop();
-                if (isInComingCall) {
+                case MSG_CALL_MAKE_VIDEO:
+                case MSG_CALL_MAKE_VOICE:
                     try {
-                        EMClient.getInstance().callManager().answerCall();
-                        isAnswered = true;
-                        // meizu MX5 4G, hasDataConnection(context) return status is incorrect
-                        // MX5 con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() return false in 4G
-                        // so we will not judge it, App can decide whether judge the network status
+                        if (msg.what == MSG_CALL_MAKE_VIDEO) {
+                            EMClient.getInstance().callManager().makeVideoCall(username);
+                        } else {
+                            EMClient.getInstance().callManager().makeVoiceCall(username);
+                        }
+                    } catch (final EMServiceNotReadyException e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                String st2 = e.getMessage();
+                                if (e.getErrorCode() == EMError.CALL_REMOTE_OFFLINE) {
+                                    st2 = getResources().getString(R.string.The_other_is_not_online);
+                                } else if (e.getErrorCode() == EMError.USER_NOT_LOGIN) {
+                                    st2 = getResources().getString(R.string.Is_not_yet_connected_to_the_server);
+                                } else if (e.getErrorCode() == EMError.INVALID_USER_NAME) {
+                                    st2 = getResources().getString(R.string.illegal_user_name);
+                                } else if (e.getErrorCode() == EMError.CALL_BUSY) {
+                                    st2 = getResources().getString(R.string.The_other_is_on_the_phone);
+                                } else if (e.getErrorCode() == EMError.NETWORK_ERROR) {
+                                    st2 = getResources().getString(R.string.can_not_connect_chat_server_connection);
+                                }
+                                Toast.makeText(CallActivity.this, st2, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
+                    }
+                    break;
+                case MSG_CALL_ANSWER:
+                    EMLog.d(TAG, "MSG_CALL_ANSWER");
+                    if (ringtone != null)
+                        ringtone.stop();
+                    if (isInComingCall) {
+                        try {
+                            EMClient.getInstance().callManager().answerCall();
+                            isAnswered = true;
+                            // meizu MX5 4G, hasDataConnection(context) return status is incorrect
+                            // MX5 con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected() return false in 4G
+                            // so we will not judge it, App can decide whether judge the network status
 
 //                        if (NetUtils.hasDataConnection(CallActivity.this)) {
 //                            EMClient.getInstance().callManager().answerCall();
@@ -210,70 +216,69 @@ public class CallActivity extends BaseActivity {
 //                            });
 //                            throw new Exception();
 //                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            saveCallRecord();
+                            finish();
+                            return;
+                        }
+                    } else {
+                        EMLog.d(TAG, "answer call isInComingCall:false");
+                    }
+                    break;
+                case MSG_CALL_REJECT:
+                    if (ringtone != null)
+                        ringtone.stop();
+                    try {
+                        EMClient.getInstance().callManager().rejectCall();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
                         saveCallRecord();
                         finish();
-                        return;
                     }
-                } else {
-                    EMLog.d(TAG, "answer call isInComingCall:false");
-                }
-                break;
-            case MSG_CALL_REJECT:
-                if (ringtone != null)
-                    ringtone.stop();
-                try {
-                    EMClient.getInstance().callManager().rejectCall();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                    saveCallRecord();
-                    finish();
-                }
-                callingState = CallingState.REFUSED;
-                break;
-            case MSG_CALL_END:
-                if (soundPool != null)
-                    soundPool.stop(streamID);
-                EMLog.d("EMCallManager", "soundPool stop MSG_CALL_END");
-                try {
-                    EMClient.getInstance().callManager().endCall();
-                } catch (Exception e) {
-                    saveCallRecord();
-                    finish();
-                }
-                
-                break;
-            case MSG_CALL_RELEASE_HANDLER:
-                try {
-                    EMClient.getInstance().callManager().endCall();
-                } catch (Exception e) {
-                }
-                handler.removeCallbacks(timeoutHangup);
-                handler.removeMessages(MSG_CALL_MAKE_VIDEO);
-                handler.removeMessages(MSG_CALL_MAKE_VOICE);
-                handler.removeMessages(MSG_CALL_ANSWER);
-                handler.removeMessages(MSG_CALL_REJECT);
-                handler.removeMessages(MSG_CALL_END);
-                callHandlerThread.quit();
-                break;
-            case MSG_CALL_SWITCH_CAMERA:
-                EMClient.getInstance().callManager().switchCamera();
-                break;
-            default:
-                break;
+                    callingState = CallingState.REFUSED;
+                    break;
+                case MSG_CALL_END:
+                    if (soundPool != null)
+                        soundPool.stop(streamID);
+                    EMLog.d("EMCallManager", "soundPool stop MSG_CALL_END");
+                    try {
+                        EMClient.getInstance().callManager().endCall();
+                    } catch (Exception e) {
+                        saveCallRecord();
+                        finish();
+                    }
+
+                    break;
+                case MSG_CALL_RELEASE_HANDLER:
+                    try {
+                        EMClient.getInstance().callManager().endCall();
+                    } catch (Exception e) {
+                    }
+                    handler.removeCallbacks(timeoutHangup);
+                    handler.removeMessages(MSG_CALL_MAKE_VIDEO);
+                    handler.removeMessages(MSG_CALL_MAKE_VOICE);
+                    handler.removeMessages(MSG_CALL_ANSWER);
+                    handler.removeMessages(MSG_CALL_REJECT);
+                    handler.removeMessages(MSG_CALL_END);
+                    callHandlerThread.quit();
+                    break;
+                case MSG_CALL_SWITCH_CAMERA:
+                    EMClient.getInstance().callManager().switchCamera();
+                    break;
+                default:
+                    break;
             }
             EMLog.d("EMCallManager CallActivity", "handleMessage ---exit block--- msg.what:" + msg.what);
         }
     };
-    
+
     void releaseHandler() {
         handler.sendEmptyMessage(MSG_CALL_RELEASE_HANDLER);
     }
-    
+
     /**
      * play the incoming call ringtone
-     *
      */
     protected int playMakeCallSounds() {
         try {
@@ -345,36 +350,36 @@ public class CallActivity extends BaseActivity {
         String st7 = getResources().getString(R.string.did_not_answer);
         String st8 = getResources().getString(R.string.Has_been_cancelled);
         switch (callingState) {
-        case NORMAL:
-            txtBody = new EMTextMessageBody(st1 + callDruationText);
-            break;
-        case REFUSED:
-            txtBody = new EMTextMessageBody(st2);
-            break;
-        case BEREFUSED:
-            txtBody = new EMTextMessageBody(st3);
-            break;
-        case OFFLINE:
-            txtBody = new EMTextMessageBody(st4);
-            break;
-        case BUSY:
-            txtBody = new EMTextMessageBody(st5);
-            break;
-        case NO_RESPONSE:
-            txtBody = new EMTextMessageBody(st6);
-            break;
-        case UNANSWERED:
-            txtBody = new EMTextMessageBody(st7);
-            break;
-        case VERSION_NOT_SAME:
-            txtBody = new EMTextMessageBody(getString(R.string.call_version_inconsistent));
-            break;
-        default:
-            txtBody = new EMTextMessageBody(st8);
-            break;
+            case NORMAL:
+                txtBody = new EMTextMessageBody(st1 + callDruationText);
+                break;
+            case REFUSED:
+                txtBody = new EMTextMessageBody(st2);
+                break;
+            case BEREFUSED:
+                txtBody = new EMTextMessageBody(st3);
+                break;
+            case OFFLINE:
+                txtBody = new EMTextMessageBody(st4);
+                break;
+            case BUSY:
+                txtBody = new EMTextMessageBody(st5);
+                break;
+            case NO_RESPONSE:
+                txtBody = new EMTextMessageBody(st6);
+                break;
+            case UNANSWERED:
+                txtBody = new EMTextMessageBody(st7);
+                break;
+            case VERSION_NOT_SAME:
+                txtBody = new EMTextMessageBody(getString(R.string.call_version_inconsistent));
+                break;
+            default:
+                txtBody = new EMTextMessageBody(st8);
+                break;
         }
         // set message extension
-        if(callType == 0)
+        if (callType == 0)
             message.setAttribute(Constant.MESSAGE_ATTR_IS_VOICE_CALL, true);
         else
             message.setAttribute(Constant.MESSAGE_ATTR_IS_VIDEO_CALL, true);
