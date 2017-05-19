@@ -37,4 +37,8 @@ public class MFGT {
     public static void gotoRegister(Activity activity) {
         startActivity(activity, RegisterActivity.class);
     }
+
+    public static void finish(Activity activity) {
+        activity.finish();
+    }
 }

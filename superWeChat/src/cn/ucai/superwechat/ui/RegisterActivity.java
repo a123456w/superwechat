@@ -13,74 +13,140 @@
  */
 package cn.ucai.superwechat.ui;
 
-import com.hyphenate.EMError;
-import com.hyphenate.chat.EMClient;
-
-import cn.ucai.superwechat.DemoHelper;
-
-import cn.ucai.superwechat.R;
-import com.hyphenate.exceptions.HyphenateException;
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 /**
  * register screen
- *
  */
 public class RegisterActivity extends BaseActivity {
-    private EditText userNameEditText;
-    private EditText passwordEditText;
-    private EditText confirmPwdEditText;
+
+    @BindView(R.id.tvTitles_back)
+    TextView tvTitlesBack;
+    @BindView(R.id.username)
+    EditText userNameEditText;
+    @BindView(R.id.usernick)
+    EditText usernick;
+    @BindView(R.id.password)
+    EditText passwordEditText;
+    @BindView(R.id.confirm_password)
+    EditText confirmPwdEditText;
+    String username;
+    String password;
+    String nick;
+    String confirm_pwd;
+    UserModel model;
+    Unbinder bind;
+    ProgressDialog pd;
+    private static final String TAG = "RegisterActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_register);
-        userNameEditText = (EditText) findViewById(R.id.username);
-        passwordEditText = (EditText) findViewById(R.id.password);
-        confirmPwdEditText = (EditText) findViewById(R.id.confirm_password);
+        bind = ButterKnife.bind(this);
+        initData();
+    }
+
+    private void initData() {
+        tvTitlesBack.setVisibility(View.VISIBLE);
+        model = new UserModel();
     }
 
     public void register(View view) {
-        final String username = userNameEditText.getText().toString().trim();
-        final String pwd = passwordEditText.getText().toString().trim();
-        String confirm_pwd = confirmPwdEditText.getText().toString().trim();
+        username = userNameEditText.getText().toString().trim();
+        password = passwordEditText.getText().toString().trim();
+        nick = usernick.getText().toString().trim();
+        confirm_pwd = confirmPwdEditText.getText().toString().trim();
+        if (checkInput()) {
+            initDialog();
+            model.registers(RegisterActivity.this, username, nick, password,
+                    new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String result) {
+                            if (result != null) {
+                                Result results = ResultUtils.getResultFromJson(result, Result.class);
+                                if (results != null && results.isRetMsg()) {
+                                    HXResgister();
+                                } else {
+                                    CommonUtils.showLongToast(R.string.Registration_failed);
+                                    dismissDialog();
+                                }
+                            } else {
+                                CommonUtils.showLongToast(R.string.Registration_failed);
+                                dismissDialog();
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            CommonUtils.showLongToast(error.toString());
+                            dismissDialog();
+                        }
+                    });
+            dismissDialog();
+        }
+    }
+
+    private boolean checkInput() {
         if (TextUtils.isEmpty(username)) {
             Toast.makeText(this, getResources().getString(R.string.User_name_cannot_be_empty), Toast.LENGTH_SHORT).show();
             userNameEditText.requestFocus();
-            return;
-        } else if (TextUtils.isEmpty(pwd)) {
+            return false;
+        } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, getResources().getString(R.string.Password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             passwordEditText.requestFocus();
-            return;
+            return false;
+        } else if (TextUtils.isEmpty(nick)) {
+            Toast.makeText(this, getResources().getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+            passwordEditText.requestFocus();
+            return false;
         } else if (TextUtils.isEmpty(confirm_pwd)) {
             Toast.makeText(this, getResources().getString(R.string.Confirm_password_cannot_be_empty), Toast.LENGTH_SHORT).show();
             confirmPwdEditText.requestFocus();
-            return;
-        } else if (!pwd.equals(confirm_pwd)) {
+            return false;
+        } else if (!password.equals(confirm_pwd)) {
             Toast.makeText(this, getResources().getString(R.string.Two_input_password), Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
+        return true;
+    }
 
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
-            final ProgressDialog pd = new ProgressDialog(this);
-            pd.setMessage(getResources().getString(R.string.Is_the_registered));
-            pd.show();
-
+    public void HXResgister() {
+        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
                         // call method in SDK
-                        EMClient.getInstance().createAccount(username, pwd);
+                        EMClient.getInstance().createAccount(username, password);
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!RegisterActivity.this.isFinishing())
-                                    pd.dismiss();
+                                    dismissDialog();
                                 // save current user
                                 DemoHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
@@ -91,7 +157,7 @@ public class RegisterActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 if (!RegisterActivity.this.isFinishing())
-                                    pd.dismiss();
+                                    dismissDialog();
                                 int errorCode = e.getErrorCode();
                                 if (errorCode == EMError.NETWORK_ERROR) {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.network_anomalies), Toast.LENGTH_SHORT).show();
@@ -104,6 +170,7 @@ public class RegisterActivity extends BaseActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
                                 }
+                                unRegister();
                             }
                         });
                     }
@@ -113,8 +180,67 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
-    public void back(View view) {
-        finish();
+    private void unRegister() {
+        model.unRegister(RegisterActivity.this, username,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        if(result!=null){
+                            Result results = ResultUtils.getResultFromJson(result, Result.class);
+                            if(results!=null&&results.isRetMsg()){
+                                L.e(TAG, "取消注册成功");
+                                return;
+                            }else{
+                                unregister();
+                            }
+                        }else{
+                            unregister();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        unregister();
+                    }
+                });
     }
 
+    private void unregister() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                unRegister();
+            }
+        });
+    }
+
+    private void initDialog() {
+        pd = new ProgressDialog(this);
+        pd.setMessage(getResources().getString(R.string.Is_the_registered));
+        pd.show();
+    }
+    private void dismissDialog(){
+        if(pd!=null&&pd.isShowing()){
+            pd.dismiss();
+        }
+    }
+    @OnClick({R.id.tvTitles_back, R.id.bt_register})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tvTitles_back:
+                MFGT.finish(RegisterActivity.this);
+                break;
+            case R.id.bt_register:
+                register(view);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(bind!=null){
+            bind.unbind();
+        }
+    }
 }
