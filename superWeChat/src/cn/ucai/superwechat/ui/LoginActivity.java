@@ -26,37 +26,39 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 
-import cn.ucai.superwechat.SuperWeChatApplication;
-import cn.ucai.superwechat.DemoHelper;
-
-import cn.ucai.superwechat.R;
-
-import cn.ucai.superwechat.db.superwechatDBManager;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.ucai.easeui.utils.EaseCommonUtils;
+import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatApplication;
+import cn.ucai.superwechat.db.superwechatDBManager;
 
 /**
  * Login screen
- *
  */
 public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
     public static final int REQUEST_CODE_SETNICK = 1;
-    private EditText usernameEditText;
-    private EditText passwordEditText;
-
+    @BindView(R.id.ivTitles_ivback)
+    ImageView ivTitlesIvback;
+    @BindView(R.id.username)
+    EditText usernameEditText;
+    @BindView(R.id.password)
+    EditText passwordEditText;
     private boolean progressShow;
     private boolean autoLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // enter the main activity if already logged in
         if (DemoHelper.getInstance().isLoggedIn()) {
             autoLogin = true;
@@ -64,11 +66,21 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         setContentView(R.layout.em_activity_login);
-
-        usernameEditText = (EditText) findViewById(R.id.username);
-        passwordEditText = (EditText) findViewById(R.id.password);
+        ButterKnife.bind(this);
+        initView();
 
         // if user changed, clear the password
+        setListener();
+        if (DemoHelper.getInstance().getCurrentUsernName() != null) {
+            usernameEditText.setText(DemoHelper.getInstance().getCurrentUsernName());
+        }
+    }
+
+    private void initView() {
+        ivTitlesIvback.setVisibility(View.VISIBLE);
+    }
+
+    private void setListener() {
         usernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -77,12 +89,10 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -97,10 +107,6 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-
-        if (DemoHelper.getInstance().getCurrentUsernName() != null) {
-            usernameEditText.setText(DemoHelper.getInstance().getCurrentUsernName());
-        }
     }
 
     /**
@@ -114,7 +120,19 @@ public class LoginActivity extends BaseActivity {
     public void login(View view) {
         currentUsername = usernameEditText.getText().toString().trim();
         currentPassword = passwordEditText.getText().toString().trim();
-        if(checkInput()){
+
+        if (!EaseCommonUtils.isNetWorkConnected(this)) {
+            Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        if (TextUtils.isEmpty(currentUsername)) {
+            Toast.makeText(this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        if (TextUtils.isEmpty(currentPassword)) {
+            Toast.makeText(this, R.string.Password_cannot_be_empty, Toast.LENGTH_SHORT).show();
+            return ;
+        }
             progressShow = true;
             initDialog();
             // After logout，the DemoDB may still be accessed due to async callback, so the DemoDB will be re-opened again.
@@ -132,12 +150,9 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "login: onSuccess");
-
-
                     // ** manually load all local groups and conversation
                     EMClient.getInstance().groupManager().loadAllGroups();
                     EMClient.getInstance().chatManager().loadAllConversations();
-
                     // update current user's display name for APNs
                     boolean updatenick = EMClient.getInstance().pushManager().updatePushNickname(
                             SuperWeChatApplication.currentUserNick.trim());
@@ -178,13 +193,10 @@ public class LoginActivity extends BaseActivity {
                     });
                 }
             });
-        }
-
-
     }
 
     private void initDialog() {
-        pd=new ProgressDialog(LoginActivity.this);
+        pd = new ProgressDialog(LoginActivity.this);
         pd.setCanceledOnTouchOutside(false);
         pd.setOnCancelListener(new OnCancelListener() {
 
@@ -198,22 +210,7 @@ public class LoginActivity extends BaseActivity {
         pd.show();
     }
 
-    private boolean checkInput() {
-        if (!EaseCommonUtils.isNetWorkConnected(this)) {
-            Toast.makeText(this, R.string.network_isnot_available, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (TextUtils.isEmpty(currentUsername)) {
-            Toast.makeText(this, R.string.User_name_cannot_be_empty, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if (TextUtils.isEmpty(currentPassword)) {
-            Toast.makeText(this, R.string.Password_cannot_be_empty, Toast.LENGTH_SHORT).show();
-            return false;
-        }
 
-        return true;
-    }
 
 
     /**

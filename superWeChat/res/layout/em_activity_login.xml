@@ -5,8 +5,7 @@
     android:background="#eff2f6"
     android:orientation="vertical">
 
-
-
+    <include layout="@layout/em_titles"/>
     <RelativeLayout
         android:gravity="center"
         android:layout_width="match_parent"
