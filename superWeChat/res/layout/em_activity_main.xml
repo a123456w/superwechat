@@ -29,6 +29,7 @@
             android:layout_height="47dp"
             android:paddingBottom="1dp">
             <cn.ucai.superwechat.widget.DMTabButton
+                android:id="@+id/dmtb_WeChat"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -36,6 +37,7 @@
                 app:tabtext="@string/app_name">
             </cn.ucai.superwechat.widget.DMTabButton>
             <cn.ucai.superwechat.widget.DMTabButton
+                android:id="@+id/dmtb_Contacts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -43,6 +45,7 @@
                 app:tabtext="@string/contacts">
             </cn.ucai.superwechat.widget.DMTabButton>
             <cn.ucai.superwechat.widget.DMTabButton
+                android:id="@+id/dmtb_Discover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -50,6 +53,7 @@
                 app:tabtext="@string/discover">
             </cn.ucai.superwechat.widget.DMTabButton>
             <cn.ucai.superwechat.widget.DMTabButton
+                android:id="@+id/dmtb_me"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

@@ -28,7 +28,9 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -50,6 +52,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.easeui.utils.EaseCommonUtils;
 import cn.ucai.redpacket.utils.RedPacketUtil;
 import cn.ucai.superwechat.Constant;
@@ -60,6 +63,7 @@ import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
 import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.widget.DMTabButton;
 import cn.ucai.superwechat.widget.DMTabHost;
 import cn.ucai.superwechat.widget.MFViewPager;
 
@@ -71,6 +75,14 @@ public class MainActivity extends BaseActivity {
     MFViewPager layoutViewpage;
     @BindView(R.id.layout_tabhost)
     DMTabHost layoutTabhost;
+    @BindView(R.id.dmtb_WeChat)
+    DMTabButton dmtbWeChat;
+    @BindView(R.id.dmtb_Contacts)
+    DMTabButton dmtbContacts;
+    @BindView(R.id.dmtb_Discover)
+    DMTabButton dmtbDiscover;
+    @BindView(R.id.dmtb_me)
+    DMTabButton dmtbMe;
 
     /*// textview for unread message count
     private TextView unreadLabel;
@@ -79,6 +91,7 @@ public class MainActivity extends BaseActivity {
 
     private Button[] mTabs;*/
     private ContactListFragment contactListFragment;
+    private DicoverFragment dicoverFragment;
     private Fragment[] fragments;
     private int index;
     private int currentTabIndex;
@@ -99,6 +112,87 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isLogin();
+        if (setLogin(savedInstanceState)) return;
+        setContentView(R.layout.em_activity_main);
+        ButterKnife.bind(this);
+        // runtime permission for android 6.0, just require all permissions here for simple
+        requestPermissions();
+        initView();
+        initment();
+        showExceptionDialogFromIntent(getIntent());
+        setFragment();
+        //register broadcast receiver to receive the change of group from DemoHelper
+        registerBroadcastReceiver();
+        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
+        //debug purpose only
+        registerInternalDebugReceiver();
+        setListener();
+    }
+
+    private void setListener() {
+        layoutViewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                initDrawable();
+                switch (position){
+                    case 0:
+                        dmtbWeChat.setSelected(true);
+                        break;
+                    case 1:
+                        dmtbContacts.setSelected(true);
+                        break;
+                    case 2:
+                        dmtbDiscover.setSelected(true);
+                        break;
+                    case 3:
+                        dmtbMe.setSelected(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+    @OnClick({R.id.dmtb_WeChat, R.id.dmtb_Contacts, R.id.dmtb_Discover, R.id.dmtb_me})
+    public void onViewClicked(View view) {
+        initDrawable();
+        switch (view.getId()) {
+            case R.id.dmtb_WeChat:
+                layoutViewpage.setCurrentItem(0);
+                dmtbWeChat.setSelected(true);
+                break;
+            case R.id.dmtb_Contacts:
+                layoutViewpage.setCurrentItem(1);
+                dmtbContacts.setSelected(true);
+                break;
+            case R.id.dmtb_Discover:
+                layoutViewpage.setCurrentItem(2);
+                dmtbDiscover.setSelected(true);
+                break;
+            case R.id.dmtb_me:
+                layoutViewpage.setCurrentItem(3);
+                dmtbMe.setSelected(true);
+                break;
+        }
+    }
+
+    private void initDrawable() {
+        dmtbWeChat.setSelected(false);
+        dmtbContacts.setSelected(false);
+        dmtbDiscover.setSelected(false);
+        dmtbMe.setSelected(false);
+    }
+
+    private void isLogin() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -109,26 +203,6 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         }
-        if (setLogin(savedInstanceState)) return;
-        setContentView(R.layout.em_activity_main);
-        ButterKnife.bind(this);
-
-        // runtime permission for android 6.0, just require all permissions here for simple
-        requestPermissions();
-
-        initView();
-        initment();
-        showExceptionDialogFromIntent(getIntent());
-
-        setFragment();
-
-        //register broadcast receiver to receive the change of group from DemoHelper
-        registerBroadcastReceiver();
-
-
-        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
-        //debug purpose only
-        registerInternalDebugReceiver();
     }
 
     private void setFragment() {
@@ -136,15 +210,19 @@ public class MainActivity extends BaseActivity {
         UserDao userDao = new UserDao(this);
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
+        dicoverFragment=new DicoverFragment();
         SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment,dicoverFragment};
 
-        adapter=new MainTabAdpter(getSupportFragmentManager());
-        adapter.addFragment(conversationListFragment,getString(R.string.app_name));
-        adapter.addFragment(contactListFragment,getString(R.string.app_name));
-        adapter.addFragment(settingFragment,getString(R.string.app_name));
-        adapter.addFragment(settingFragment,getString(R.string.app_name));
+        adapter = new MainTabAdpter(getSupportFragmentManager());
+        adapter.addFragment(conversationListFragment, getString(R.string.app_name));
+        adapter.addFragment(contactListFragment, getString(R.string.app_name));
+        adapter.addFragment(settingFragment, getString(R.string.app_name));
+        adapter.addFragment(dicoverFragment, getString(R.string.app_name));
         layoutViewpage.setAdapter(adapter);
+        layoutViewpage.setCurrentItem(0);
+
+
     }
 
     private void initment() {
@@ -326,6 +404,8 @@ public class MainActivity extends BaseActivity {
         };
         broadcastManager.registerReceiver(broadcastReceiver, intentFilter);
     }
+
+
 
     public class MyContactListener implements EMContactListener {
         @Override
