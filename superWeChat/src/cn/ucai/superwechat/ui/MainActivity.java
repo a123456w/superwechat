@@ -15,6 +15,7 @@ package cn.ucai.superwechat.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,20 +25,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
-
-import cn.ucai.redpacket.utils.RedPacketUtil;
-
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMMessageListener;
@@ -46,34 +42,42 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMMessage;
-
-import cn.ucai.superwechat.Constant;
-import cn.ucai.superwechat.DemoHelper;
-
-import cn.ucai.superwechat.R;
-
-import cn.ucai.superwechat.db.InviteMessgeDao;
-import cn.ucai.superwechat.db.UserDao;
-import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
-import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
-import cn.ucai.easeui.utils.EaseCommonUtils;
-
 import com.hyphenate.util.EMLog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.ucai.easeui.utils.EaseCommonUtils;
+import cn.ucai.redpacket.utils.RedPacketUtil;
+import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.adapter.MainTabAdpter;
+import cn.ucai.superwechat.db.InviteMessgeDao;
+import cn.ucai.superwechat.db.UserDao;
+import cn.ucai.superwechat.runtimepermissions.PermissionsManager;
+import cn.ucai.superwechat.runtimepermissions.PermissionsResultAction;
+import cn.ucai.superwechat.widget.DMTabHost;
+import cn.ucai.superwechat.widget.MFViewPager;
+
 @SuppressLint("NewApi")
 public class MainActivity extends BaseActivity {
 
     protected static final String TAG = "MainActivity";
-    // textview for unread message count
+    @BindView(R.id.layout_viewpage)
+    MFViewPager layoutViewpage;
+    @BindView(R.id.layout_tabhost)
+    DMTabHost layoutTabhost;
+
+    /*// textview for unread message count
     private TextView unreadLabel;
     // textview for unread event message
     private TextView unreadAddressLable;
 
-    private Button[] mTabs;
+    private Button[] mTabs;*/
     private ContactListFragment contactListFragment;
     private Fragment[] fragments;
     private int index;
@@ -82,6 +86,7 @@ public class MainActivity extends BaseActivity {
     public boolean isConflict = false;
     // user account was removed
     private boolean isCurrentAccountRemoved = false;
+    MainTabAdpter adapter;
 
 
     /**
@@ -99,46 +104,23 @@ public class MainActivity extends BaseActivity {
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 Intent intent = new Intent();
-                intent.setAction(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + packageName));
                 startActivity(intent);
             }
         }
-
-        //make sure activity will not in background if user is logged into another device or removed
-        if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
-            DemoHelper.getInstance().logout(false, null);
-            finish();
-            startActivity(new Intent(this, LoginActivity.class));
-            return;
-        } else if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
-            finish();
-            startActivity(new Intent(this, LoginActivity.class));
-            return;
-        }
+        if (setLogin(savedInstanceState)) return;
         setContentView(R.layout.em_activity_main);
+        ButterKnife.bind(this);
+
         // runtime permission for android 6.0, just require all permissions here for simple
         requestPermissions();
 
         initView();
-
-        //umeng api
-        MobclickAgent.updateOnlineConfig(this);
-        UmengUpdateAgent.setUpdateOnlyWifi(false);
-        UmengUpdateAgent.update(this);
-
+        initment();
         showExceptionDialogFromIntent(getIntent());
 
-        inviteMessgeDao = new InviteMessgeDao(this);
-        UserDao userDao = new UserDao(this);
-        conversationListFragment = new ConversationListFragment();
-        contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
-
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
-                .add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
-                .commit();
+        setFragment();
 
         //register broadcast receiver to receive the change of group from DemoHelper
         registerBroadcastReceiver();
@@ -147,6 +129,44 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
         //debug purpose only
         registerInternalDebugReceiver();
+    }
+
+    private void setFragment() {
+        inviteMessgeDao = new InviteMessgeDao(this);
+        UserDao userDao = new UserDao(this);
+        conversationListFragment = new ConversationListFragment();
+        contactListFragment = new ContactListFragment();
+        SettingsFragment settingFragment = new SettingsFragment();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+
+        adapter=new MainTabAdpter(getSupportFragmentManager());
+        adapter.addFragment(conversationListFragment,getString(R.string.app_name));
+        adapter.addFragment(contactListFragment,getString(R.string.app_name));
+        adapter.addFragment(settingFragment,getString(R.string.app_name));
+        adapter.addFragment(settingFragment,getString(R.string.app_name));
+        layoutViewpage.setAdapter(adapter);
+    }
+
+    private void initment() {
+        //umeng api
+        MobclickAgent.updateOnlineConfig(this);
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        UmengUpdateAgent.update(this);
+    }
+
+    private boolean setLogin(Bundle savedInstanceState) {
+        //make sure activity will not in background if user is logged into another device or removed
+        if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
+            DemoHelper.getInstance().logout(false, null);
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+            return true;
+        } else if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+            return true;
+        }
+        return false;
     }
 
     @TargetApi(23)
@@ -168,14 +188,14 @@ public class MainActivity extends BaseActivity {
      * init views
      */
     private void initView() {
-        unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
+       /* unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
         unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
         mTabs = new Button[3];
         mTabs[0] = (Button) findViewById(R.id.btn_conversation);
         mTabs[1] = (Button) findViewById(R.id.btn_address_list);
         mTabs[2] = (Button) findViewById(R.id.btn_setting);
         // select first tab
-        mTabs[0].setSelected(true);
+        mTabs[0].setSelected(true);*/
     }
 
     /**
@@ -183,7 +203,7 @@ public class MainActivity extends BaseActivity {
      *
      * @param view
      */
-    public void onTabClicked(View view) {
+    public void onTabClicked(View view) {/*
         switch (view.getId()) {
             case R.id.btn_conversation:
                 index = 0;
@@ -206,7 +226,7 @@ public class MainActivity extends BaseActivity {
         mTabs[currentTabIndex].setSelected(false);
         // set current tab selected
         mTabs[index].setSelected(true);
-        currentTabIndex = index;
+        currentTabIndex = index;*/
     }
 
     EMMessageListener messageListener = new EMMessageListener() {
@@ -368,19 +388,19 @@ public class MainActivity extends BaseActivity {
      */
     public void updateUnreadLabel() {
         int count = getUnreadMsgCountTotal();
-        if (count > 0) {
+        /*if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
             unreadLabel.setVisibility(View.VISIBLE);
         } else {
             unreadLabel.setVisibility(View.INVISIBLE);
-        }
+        }*/
     }
 
     /**
      * update the total unread count
      */
     public void updateUnreadAddressLable() {
-        runOnUiThread(new Runnable() {
+        /*runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
                 if (count > 0) {
@@ -389,7 +409,7 @@ public class MainActivity extends BaseActivity {
                     unreadAddressLable.setVisibility(View.INVISIBLE);
                 }
             }
-        });
+        });*/
 
     }
 
@@ -464,7 +484,7 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private android.app.AlertDialog.Builder exceptionBuilder;
+    private AlertDialog.Builder exceptionBuilder;
     private boolean isExceptionDialogShow = false;
     private BroadcastReceiver internalDebugReceiver;
     private ConversationListFragment conversationListFragment;
@@ -493,7 +513,7 @@ public class MainActivity extends BaseActivity {
             // clear up global variables
             try {
                 if (exceptionBuilder == null)
-                    exceptionBuilder = new android.app.AlertDialog.Builder(MainActivity.this);
+                    exceptionBuilder = new AlertDialog.Builder(MainActivity.this);
                 exceptionBuilder.setTitle(st);
                 exceptionBuilder.setMessage(getExceptionMessageId(exceptionType));
                 exceptionBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
