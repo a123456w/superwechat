@@ -164,8 +164,7 @@ public class LoginActivity extends BaseActivity {
                         pd.dismiss();
                     }
                     // get user's info (this should be get from App's server or 3rd party service)
-                    DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
-
+                    DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentAppUserInfo();
                     Intent intent = new Intent(LoginActivity.this,
                             MainActivity.class);
                     startActivity(intent);
