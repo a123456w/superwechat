@@ -37,6 +37,7 @@ import cn.ucai.superwechat.data.net.OnCompleteListener;
 import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.L;
+import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.ResultUtils;
 
@@ -84,21 +85,26 @@ public class RegisterActivity extends BaseActivity {
         confirm_pwd = confirmPwdEditText.getText().toString().trim();
         if (checkInput()) {
             initDialog();
-            model.registers(RegisterActivity.this, username, nick, password,
+            model.registers(RegisterActivity.this, username, nick, MD5.getMessageDigest(password),
                     new OnCompleteListener<String>() {
                         @Override
-                        public void onSuccess(String result) {
-                            if (result != null) {
-                                Result results = ResultUtils.getResultFromJson(result, Result.class);
-                                if (results != null && results.isRetMsg()) {
-                                    HXResgister();
-                                } else {
-                                    CommonUtils.showLongToast(R.string.Registration_failed);
+                        public void onSuccess(String s) {
+                            boolean isSuccess=true;
+                            if (s != null) {
+                                Result results = ResultUtils.getResultFromJson(s,null);
+                                if (results != null) {
+                                    if (results.getRetCode()==I.MSG_REGISTER_USERNAME_EXISTS){
+                                        CommonUtils.showLongToast(R.string.User_already_exists);
+                                    }else if(results.getRetCode()==I.MSG_REGISTER_FAIL){
+                                        CommonUtils.showLongToast(R.string.Registration_failed);
+                                    }else if(results.isRetMsg()){
+                                        isSuccess=false;
+                                        HXResgister();
+                                    }
+                                }
+                                if(isSuccess){
                                     dismissDialog();
                                 }
-                            } else {
-                                CommonUtils.showLongToast(R.string.Registration_failed);
-                                dismissDialog();
                             }
                         }
 
@@ -137,7 +143,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     public void HXResgister() {
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(MD5.getMessageDigest(password))) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
@@ -145,11 +151,11 @@ public class RegisterActivity extends BaseActivity {
                         EMClient.getInstance().createAccount(username, password);
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                if (!RegisterActivity.this.isFinishing())
-                                    dismissDialog();
                                 // save current user
                                 DemoHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
+                                if (!RegisterActivity.this.isFinishing())
+                                    dismissDialog();
                                 MFGT.gotoLogin(RegisterActivity.this);
                                 finish();
                             }
