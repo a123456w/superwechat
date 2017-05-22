@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="#eff2f6"
     android:orientation="vertical">
-
     <include layout="@layout/em_titles"/>
 
     <LinearLayout

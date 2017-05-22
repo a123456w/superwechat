@@ -150,6 +150,7 @@ public class RegisterActivity extends BaseActivity {
                                 // save current user
                                 DemoHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
+                                MFGT.gotoLogin(RegisterActivity.this);
                                 finish();
                             }
                         });
@@ -170,13 +171,15 @@ public class RegisterActivity extends BaseActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed), Toast.LENGTH_SHORT).show();
                                 }
-                                unRegister();
+                                unregister();
                             }
                         });
                     }
                 }
             }).start();
 
+        }else{
+            unregister();
         }
     }
 
