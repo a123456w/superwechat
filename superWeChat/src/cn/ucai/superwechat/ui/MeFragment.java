@@ -33,12 +33,12 @@ import cn.ucai.superwechat.utils.MFGT;
 public class MeFragment extends EaseBaseFragment {
 
 
-    @BindView(R.id.ivAvatar)
+    @BindView(R.id.iv_profile_avatar)
     ImageView ivAvatar;
-    @BindView(R.id.tvNick)
+    @BindView(R.id.tv_profile_nickname)
     TextView tvNick;
     Unbinder unbinder;
-    @BindView(R.id.tvName)
+    @BindView(R.id.tv_profile_username)
     TextView tvName;
 
 
@@ -82,19 +82,20 @@ public class MeFragment extends EaseBaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.rlUser, R.id.rlMoney, R.id.rlSetting})
+    @OnClick({R.id.layout_profile_view, R.id.tv_profile_money, R.id.tv_profile_settings})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.rlUser:
+            case R.id.layout_profile_view:
+                MFGT.gotoProfile(getActivity());
                 startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
                         .putExtra("username", EMClient.getInstance().getCurrentUser()));
                 break;
             //red packet code : 进入零钱或红包记录页面
-            case R.id.rlMoney:
+            case R.id.tv_profile_money:
                 //支付宝版红包SDK调用如下方法进入红包记录页面
                 RPRedPacketUtil.getInstance().startRecordActivity(getActivity());
                 break;
-            case R.id.rlSetting:
+            case R.id.tv_profile_settings:
                 MFGT.gotoSetting(getActivity());
                 break;
         }

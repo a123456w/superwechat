@@ -1,18 +1,5 @@
 package cn.ucai.superwechat.ui;
 
-import java.io.ByteArrayOutputStream;
-
-import com.bumptech.glide.Glide;
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
-
-import cn.ucai.superwechat.SuperWeChatHelper;
-
-import cn.ucai.superwechat.R;
-
-import cn.ucai.easeui.domain.EaseUser;
-import cn.ucai.easeui.utils.EaseUserUtils;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -33,91 +20,63 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class UserProfileActivity extends BaseActivity implements OnClickListener {
+import com.bumptech.glide.Glide;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+
+import java.io.ByteArrayOutputStream;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.ucai.easeui.domain.EaseUser;
+import cn.ucai.easeui.domain.User;
+import cn.ucai.easeui.utils.EaseUserUtils;
+import cn.ucai.easeui.widget.EaseTitleBar;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.MFGT;
+
+public class UserProfileActivity extends BaseActivity  {
 
     private static final int REQUESTCODE_PICK = 1;
     private static final int REQUESTCODE_CUTTING = 2;
-    private ImageView headAvatar;
-    private ImageView headPhotoUpdate;
-    private ImageView iconRightArrow;
-    private TextView tvNickName;
-    private TextView tvUsername;
+    @BindView(R.id.title_bar)
+    EaseTitleBar titleBar;
+    @BindView(R.id.iv_userinfo_avatar)
+    ImageView ivUserinfoAvatar;
+    @BindView(R.id.tv_userinfo_nick)
+    TextView tvUserinfoNick;
+    @BindView(R.id.tv_userinfo_name)
+    TextView tvUserinfoName;
+
     private ProgressDialog dialog;
-    private RelativeLayout rlNickName;
+
 
 
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_user_profile);
-        initView();
+        ButterKnife.bind(this);
         initListener();
     }
-
-    private void initView() {
-        headAvatar = (ImageView) findViewById(R.id.user_head_avatar);
-        headPhotoUpdate = (ImageView) findViewById(R.id.user_head_headphoto_update);
-        tvUsername = (TextView) findViewById(R.id.user_username);
-        tvNickName = (TextView) findViewById(R.id.user_nickname);
-        rlNickName = (RelativeLayout) findViewById(R.id.rl_nickname);
-        iconRightArrow = (ImageView) findViewById(R.id.ic_right_arrow);
-    }
-
     private void initListener() {
-        Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
-        boolean enableUpdate = intent.getBooleanExtra("setting", false);
-        if (enableUpdate) {
-            headPhotoUpdate.setVisibility(View.VISIBLE);
-            iconRightArrow.setVisibility(View.VISIBLE);
-            rlNickName.setOnClickListener(this);
-            headAvatar.setOnClickListener(this);
-        } else {
-            headPhotoUpdate.setVisibility(View.GONE);
-            iconRightArrow.setVisibility(View.INVISIBLE);
+
+        User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
+        if(user!=null){
+            tvUserinfoName.setText("微信号: "+EMClient.getInstance().getCurrentUser());
+            EaseUserUtils.setUserNick(user.getMUserName(), tvUserinfoNick);
+            EaseUserUtils.setUserAvatar(this, user.getMUserName(), ivUserinfoAvatar);
+            //asyncFetchUserInfo(user.getMUserName());
         }
-        if (username != null) {
-            if (username.equals(EMClient.getInstance().getCurrentUser())) {
-                tvUsername.setText(EMClient.getInstance().getCurrentUser());
-                EaseUserUtils.setUserNick(username, tvNickName);
-                EaseUserUtils.setUserAvatar(this, username, headAvatar);
-            } else {
-                tvUsername.setText(username);
-                EaseUserUtils.setUserNick(username, tvNickName);
-                EaseUserUtils.setUserAvatar(this, username, headAvatar);
-                asyncFetchUserInfo(username);
+        titleBar.setLeftLayoutClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.finish(UserProfileActivity.this);
             }
-        }
+        });
     }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.user_head_avatar:
-                uploadHeadPhoto();
-                break;
-            case R.id.rl_nickname:
-                final EditText editText = new EditText(this);
-                new AlertDialog.Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
-                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String nickString = editText.getText().toString();
-                                if (TextUtils.isEmpty(nickString)) {
-                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                updateRemoteNick(nickString);
-                            }
-                        }).setNegativeButton(R.string.dl_cancel, null).show();
-                break;
-            default:
-                break;
-        }
-
-    }
-
     public void asyncFetchUserInfo(String username) {
         SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
 
@@ -128,11 +87,11 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                     if (isFinishing()) {
                         return;
                     }
-                    tvNickName.setText(user.getNick());
+                    tvUserinfoNick.setText(user.getNick());
                     if (!TextUtils.isEmpty(user.getAvatar())) {
-                        Glide.with(UserProfileActivity.this).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(headAvatar);
+                        Glide.with(UserProfileActivity.this).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(ivUserinfoAvatar);
                     } else {
-                        Glide.with(UserProfileActivity.this).load(R.drawable.em_default_avatar).into(headAvatar);
+                        Glide.with(UserProfileActivity.this).load(R.drawable.em_default_avatar).into(ivUserinfoAvatar);
                     }
                 }
             }
@@ -145,7 +104,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
 
 
     private void uploadHeadPhoto() {
-        AlertDialog.Builder builder = new Builder(this);
+        Builder builder = new Builder(this);
         builder.setTitle(R.string.dl_title_upload_photo);
         builder.setItems(new String[]{getString(R.string.dl_msg_take_photo), getString(R.string.dl_msg_local_upload)},
                 new DialogInterface.OnClickListener() {
@@ -196,7 +155,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                             dialog.dismiss();
                             Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
                                     .show();
-                            tvNickName.setText(nickName);
+                            tvUserinfoNick.setText(nickName);
                         }
                     });
                 }
@@ -247,7 +206,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), photo);
-            headAvatar.setImageDrawable(drawable);
+            ivUserinfoAvatar.setImageDrawable(drawable);
             uploadUserAvatar(Bitmap2Bytes(photo));
         }
 
@@ -286,5 +245,30 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
+    }
+
+    @OnClick({R.id.title_bar, R.id.layout_userinfo_avatar, R.id.layout_userinfo_nick, R.id.layout_userinfo_name})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.layout_userinfo_avatar:
+                uploadHeadPhoto();
+                break;
+            case R.id.layout_userinfo_nick:
+                final EditText editText = new EditText(this);
+                new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
+                        .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String nickString = editText.getText().toString();
+                                if (TextUtils.isEmpty(nickString)) {
+                                    Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                updateRemoteNick(nickString);
+                            }
+                        }).setNegativeButton(R.string.dl_cancel, null).show();
+                break;
+        }
     }
 }

@@ -1,160 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#eee">
-    <cn.ucai.easeui.widget.EaseTitleBar
-        android:id="@+id/title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <RelativeLayout
-        android:id="@+id/rlUser"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center_vertical"
-        android:background="#fbf5f5">
-        <ImageView
-            android:id="@+id/ivAvatar"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:src="@drawable/default_avatar"
-            />
-        <TextView
-            android:id="@+id/tvNick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="nick"
-            android:textSize="23dp"
-            android:textColor="#000"
-            android:layout_toRightOf="@id/ivAvatar"
-            android:paddingTop="15dp"
-            android:paddingLeft="20dp"/>
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="23dp"
-            android:textColor="#000"
-            android:paddingTop="6dp"
-            android:paddingLeft="20dp"
-            android:layout_toRightOf="@+id/ivAvatar"
-            android:layout_below="@+id/tvNick" />
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/erwema"
-            android:src="@drawable/em_call_hangup_bg"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingRight="30dp"/>
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:visibility="invisible"/>
-    <RelativeLayout
-        android:id="@+id/rlPhoto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <View
-                android:layout_width="30dp"
-                android:layout_height="0dp"/>
-        <ImageView
-            android:id="@+id/ivPhoto"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/icon_me_photo"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-            />
-        <TextView
-            android:paddingLeft="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ivPhoto"
-            android:text="相册"
-            android:textSize="23dp"
-            android:textColor="#000"
-            android:layout_gravity="center_vertical"/>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-        </LinearLayout>
-    </RelativeLayout>
-    <View
-        android:layout_width="320dp"
-        android:layout_height="0.1dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#e48f8e8e"/>
-    <RelativeLayout
-        android:id="@+id/rlMoney"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
             <View
-                android:layout_width="30dp"
-                android:layout_height="0dp"/>
-            <ImageView
-                android:id="@+id/ivMoney"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_me_money"
-                />
-            <TextView
-                android:paddingLeft="20dp"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/black3" />
+
+            <RelativeLayout
+                android:id="@+id/layout_profile_view"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ivMoney"
-                android:text="钱包"
-                android:textSize="23dp"
-                android:textColor="#000"
-                android:layout_gravity="center_vertical"/>
+                android:layout_marginTop="10dp"
+                android:background="@drawable/setting_item_selector"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
 
-        </LinearLayout>
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:visibility="invisible"/>
-    <RelativeLayout
-        android:id="@+id/rlSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/iv_profile_avatar"
+                    android:layout_width="60dip"
+                    android:layout_height="60dip"
+                    android:src="@drawable/default_hd_avatar"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp" />
+
+                <TextView
+                    android:id="@+id/tv_profile_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/iv_profile_avatar"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_profile_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_profile_nickname"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@id/iv_profile_avatar"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"/>
+
+            </RelativeLayout>
+
             <View
-                android:layout_width="30dp"
-                android:layout_height="0dp"/>
-            <ImageView
-                android:id="@+id/ivSetting"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_me_setting"
-                />
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/black3" />
+
+
             <TextView
-                android:paddingLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ivMoney"
-                android:text="设置"
-                android:textSize="23dp"
-                android:textColor="#000"
-                android:layout_gravity="center_vertical"/>
+                android:id="@+id/tv_profile_album"
+                style="@style/list_txt_Style_without_right"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/icon_me_photo"
+                android:text="@string/profile_txt_album" />
 
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/black3" />
+
+            <TextView
+                android:id="@+id/tv_profile_collect"
+                style="@style/list_txt_Style_without_right"
+                android:drawableLeft="@drawable/icon_me_collect"
+                android:text="@string/profile_txt_collect" />
+
+            <TextView
+                android:id="@+id/tv_profile_money"
+                style="@style/list_txt_Style_without_right"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/icon_me_money"
+                android:text="@string/profile_txt_money" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/black3" />
+
+
+            <TextView
+                android:id="@+id/tv_profile_smail"
+                style="@style/list_txt_Style_without_right"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/icon_me_smail"
+                android:drawablePadding="10dp"
+                android:text="@string/profile_txt_smail" />
+
+            <TextView
+                android:id="@+id/tv_profile_settings"
+                style="@style/list_txt_Style_without_right"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@drawable/icon_me_setting"
+                android:text="@string/profile_txt_setting" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.3dp"
+                android:background="@color/black3" />
         </LinearLayout>
-    </RelativeLayout>
-
-
+    </ScrollView>
 </LinearLayout>

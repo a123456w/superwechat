@@ -11,6 +11,7 @@ import cn.ucai.superwechat.ui.MainActivity;
 import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
 import cn.ucai.superwechat.ui.SplashActivity;
+import cn.ucai.superwechat.ui.UserProfileActivity;
 
 /**
  * Created by Administrator on 2017/5/19 0019.
@@ -54,5 +55,9 @@ public class MFGT {
 
     public static void logout(Activity activity) {
         startActivity(activity,new Intent(activity,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+    }
+
+    public static void gotoProfile(Activity activity) {
+        startActivity(activity, UserProfileActivity.class);
     }
 }
