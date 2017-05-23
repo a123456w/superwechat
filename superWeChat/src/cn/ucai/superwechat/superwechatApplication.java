@@ -49,7 +49,7 @@ public class SuperWeChatApplication extends Application {
         instance = this;
 
         //init demo helper
-        DemoHelper.getInstance().init(applicationContext);
+        SuperWeChatHelper.getInstance().init(applicationContext);
         //red packet code : 初始化红包SDK，开启日志输出开关
         RedPacket.getInstance().initRedPacket(applicationContext, RPConstant.AUTH_METHOD_EASEMOB, new RPInitRedPacketCallback() {
 

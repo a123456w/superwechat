@@ -36,7 +36,7 @@ import com.hyphenate.chat.EMClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.easeui.utils.EaseCommonUtils;
-import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatApplication;
 import cn.ucai.superwechat.db.superwechatDBManager;
@@ -60,7 +60,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // enter the main activity if already logged in
-        if (DemoHelper.getInstance().isLoggedIn()) {
+        if (SuperWeChatHelper.getInstance().isLoggedIn()) {
             autoLogin = true;
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             return;
@@ -71,8 +71,8 @@ public class LoginActivity extends BaseActivity {
 
         // if user changed, clear the password
         setListener();
-        if (DemoHelper.getInstance().getCurrentUsernName() != null) {
-            usernameEditText.setText(DemoHelper.getInstance().getCurrentUsernName());
+        if (SuperWeChatHelper.getInstance().getCurrentUsernName() != null) {
+            usernameEditText.setText(SuperWeChatHelper.getInstance().getCurrentUsernName());
         }
     }
 
@@ -140,7 +140,7 @@ public class LoginActivity extends BaseActivity {
             superwechatDBManager.getInstance().closeDB();
 
             // reset current user name before login
-            DemoHelper.getInstance().setCurrentUserName(currentUsername);
+            SuperWeChatHelper.getInstance().setCurrentUserName(currentUsername);
 
             final long start = System.currentTimeMillis();
             // call login method
@@ -164,7 +164,7 @@ public class LoginActivity extends BaseActivity {
                         pd.dismiss();
                     }
                     // get user's info (this should be get from App's server or 3rd party service)
-                    DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentAppUserInfo();
+                    SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentAppUserInfo();
                     Intent intent = new Intent(LoginActivity.this,
                             MainActivity.class);
                     startActivity(intent);

@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import cn.ucai.superwechat.DemoHelper;
+import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.data.Result;
@@ -152,7 +152,7 @@ public class RegisterActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 // save current user
-                                DemoHelper.getInstance().setCurrentUserName(username);
+                                SuperWeChatHelper.getInstance().setCurrentUserName(username);
                                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_SHORT).show();
                                 if (!RegisterActivity.this.isFinishing())
                                     dismissDialog();
