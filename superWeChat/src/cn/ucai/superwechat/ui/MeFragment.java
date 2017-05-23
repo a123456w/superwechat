@@ -1,5 +1,6 @@
 package cn.ucai.superwechat.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.easemob.redpacketui.utils.RPRedPacketUtil;
+import com.hyphenate.chat.EMClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,10 +82,12 @@ public class MeFragment extends EaseBaseFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.rlPhoto, R.id.rlMoney, R.id.rlSetting})
+    @OnClick({R.id.rlUser, R.id.rlMoney, R.id.rlSetting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.rlPhoto:
+            case R.id.rlUser:
+                startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
+                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
                 break;
             //red packet code : 进入零钱或红包记录页面
             case R.id.rlMoney:
