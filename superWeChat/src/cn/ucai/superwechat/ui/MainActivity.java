@@ -131,6 +131,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setListener() {
+        layoutTabhost.setOnCheckedChangeListener(new DMTabHost.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChange(int checkedPosition, boolean byUser) {
+                layoutViewpage.setCurrentItem(checkedPosition,false);
+            }
+        });
         layoutViewpage.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,21 +145,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                initDrawable();
-                switch (position){
-                    case 0:
-                        dmtbWeChat.setSelected(true);
-                        break;
-                    case 1:
-                        dmtbContacts.setSelected(true);
-                        break;
-                    case 2:
-                        dmtbDiscover.setSelected(true);
-                        break;
-                    case 3:
-                        dmtbMe.setSelected(true);
-                        break;
-                }
+                layoutTabhost.setChecked(position);
             }
 
             @Override
@@ -162,24 +154,23 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-    @OnClick({R.id.dmtb_WeChat, R.id.dmtb_Contacts, R.id.dmtb_Discover, R.id.dmtb_me})
+   /* @OnClick({R.id.dmtb_WeChat, R.id.dmtb_Contacts, R.id.dmtb_Discover, R.id.dmtb_me})
     public void onViewClicked(View view) {
-        initDrawable();
         switch (view.getId()) {
             case R.id.dmtb_WeChat:
-                layoutViewpage.setCurrentItem(0);
+                layoutViewpage.setCurrentItem(0,false);
                 dmtbWeChat.setSelected(true);
                 break;
             case R.id.dmtb_Contacts:
-                layoutViewpage.setCurrentItem(1);
+                layoutViewpage.setCurrentItem(1,false);
                 dmtbContacts.setSelected(true);
                 break;
             case R.id.dmtb_Discover:
-                layoutViewpage.setCurrentItem(2);
+                layoutViewpage.setCurrentItem(2,false);
                 dmtbDiscover.setSelected(true);
                 break;
             case R.id.dmtb_me:
-                layoutViewpage.setCurrentItem(3);
+                layoutViewpage.setCurrentItem(3,false);
                 dmtbMe.setSelected(true);
                 break;
         }
@@ -190,7 +181,7 @@ public class MainActivity extends BaseActivity {
         dmtbContacts.setSelected(false);
         dmtbDiscover.setSelected(false);
         dmtbMe.setSelected(false);
-    }
+    }*/
 
     private void isLogin() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -220,9 +211,7 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(settingFragment, getString(R.string.app_name));
         adapter.addFragment(dicoverFragment, getString(R.string.app_name));
         layoutViewpage.setAdapter(adapter);
-        layoutViewpage.setCurrentItem(0);
-
-
+        layoutTabhost.setChecked(0);
     }
 
     private void initment() {
