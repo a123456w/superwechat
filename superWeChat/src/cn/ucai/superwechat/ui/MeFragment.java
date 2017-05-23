@@ -17,8 +17,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.ui.EaseBaseFragment;
+import cn.ucai.easeui.widget.EaseTitleBar;
+import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.MFGT;
 
 /**
  * Created by Administrator on 2017/5/23 0023.
@@ -58,6 +61,8 @@ public class MeFragment extends EaseBaseFragment {
                 Glide.with(getContext()).load(R.drawable.em_default_avatar).into(ivAvatar);
             }
         }
+        EaseTitleBar titlesBar = (EaseTitleBar) titleBar.findViewById(R.id.title_bar);
+        titlesBar.setTitle(getString(R.string.me));
     }
 
     @Nullable
@@ -82,7 +87,17 @@ public class MeFragment extends EaseBaseFragment {
             case R.id.rlMoney:
                 break;
             case R.id.rlSetting:
+                MFGT.gotoSetting(getActivity());
                 break;
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (((MainActivity) getActivity()).isConflict) {
+            outState.putBoolean("isConflict", true);
+        } else if (((MainActivity) getActivity()).getCurrentAccountRemoved()) {
+            outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }
 }

@@ -202,14 +202,14 @@ public class MainActivity extends BaseActivity {
         contactListFragment = new ContactListFragment();
         dicoverFragment=new DicoverFragment();
         meFragment = new MeFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, meFragment,dicoverFragment};
+        SettingsActivity settingFragment = new SettingsActivity();
+        fragments = new Fragment[]{conversationListFragment, contactListFragment, dicoverFragment,meFragment};
 
         adapter = new MainTabAdpter(getSupportFragmentManager());
         adapter.addFragment(conversationListFragment, getString(R.string.app_name));
         adapter.addFragment(contactListFragment, getString(R.string.app_name));
-        adapter.addFragment(meFragment, getString(R.string.app_name));
         adapter.addFragment(dicoverFragment, getString(R.string.app_name));
+        adapter.addFragment(meFragment, getString(R.string.app_name));
         layoutViewpage.setAdapter(adapter);
         layoutTabhost.setChecked(0);
     }
