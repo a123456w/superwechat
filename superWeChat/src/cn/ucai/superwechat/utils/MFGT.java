@@ -32,6 +32,10 @@ public class MFGT {
     private static void startActivity(Context context, Class clazz) {
         context.startActivity(new Intent(context,clazz));
     }
+    private static void startActivity(Context context,Intent intent) {
+        context.startActivity(intent);
+    }
+
 
     public static void gotoGuide(Activity activity) {
        startActivity(activity,GuideActivity.class);
@@ -46,5 +50,9 @@ public class MFGT {
 
     public static void gotoSetting(Activity activity) {
         startActivity(activity,SettingsActivity.class);
+    }
+
+    public static void logout(Activity activity) {
+        startActivity(activity,new Intent(activity,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP));
     }
 }

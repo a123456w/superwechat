@@ -447,7 +447,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
                         pd.dismiss();
                         // show login screen
                         finish();
-                        startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                        MFGT.logout(SettingsActivity.this);
+
 
                     }
                 });
