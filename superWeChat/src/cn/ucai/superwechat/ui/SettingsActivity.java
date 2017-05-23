@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import cn.ucai.superwechat.SuperWeChatModel;
 
 import cn.ucai.superwechat.R;
 
+import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.easeui.widget.EaseSwitchButton;
 
@@ -164,7 +166,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener {
         }
         customServerSwitch = (EaseSwitchButton)findViewById(R.id.switch_custom_server);
         customAppkeySwitch = (EaseSwitchButton)findViewById(R.id.switch_custom_appkey);
-
+        ImageView ivBack = (ImageView) findViewById(R.id.ivback);
+        ivBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.finish(SettingsActivity.this);
+            }
+        });
         textview1 = (TextView)findViewById(R.id.textview1);
         textview2 = (TextView)findViewById(R.id.textview2);
 
