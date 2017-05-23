@@ -54,6 +54,8 @@ public class MeFragment extends EaseBaseFragment {
 
     @Override
     protected void setUpView() {
+        titleBar.setRightImageResource(R.drawable.em_add);
+        titleBar.setTitle(getString(R.string.me));
         User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
         if (user != null) {
             tvName.setText("微信号 :" + user.getMUserName());
@@ -64,8 +66,7 @@ public class MeFragment extends EaseBaseFragment {
                 Glide.with(getContext()).load(R.drawable.em_default_avatar).into(ivAvatar);
             }
         }
-        EaseTitleBar titlesBar = (EaseTitleBar) titleBar.findViewById(R.id.title_bar);
-        titlesBar.setTitle(getString(R.string.me));
+
     }
 
     @Nullable
