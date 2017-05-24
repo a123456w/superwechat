@@ -56,6 +56,10 @@ public class MeFragment extends EaseBaseFragment {
     protected void setUpView() {
         titleBar.setRightImageResource(R.drawable.em_add);
         titleBar.setTitle(getString(R.string.me));
+        updata();
+    }
+
+    private void updata() {
         User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
         if (user != null) {
             tvName.setText("微信号 :" + user.getMUserName());
@@ -66,7 +70,6 @@ public class MeFragment extends EaseBaseFragment {
                 Glide.with(getContext()).load(R.drawable.em_default_avatar).into(ivAvatar);
             }
         }
-
     }
 
     @Nullable
@@ -82,16 +85,19 @@ public class MeFragment extends EaseBaseFragment {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        updata();
+    }
 
     @OnClick({R.id.layout_profile_view, R.id.tv_profile_money, R.id.tv_profile_settings})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.layout_profile_view:
                 MFGT.gotoProfile(getActivity());
-                startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
+                /*startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
+                        .putExtra("username", EMClient.getInstance().getCurrentUser()));*/
                 break;
             //red packet code : 进入零钱或红包记录页面
             case R.id.tv_profile_money:
