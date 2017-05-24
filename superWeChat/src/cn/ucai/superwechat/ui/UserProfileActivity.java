@@ -33,9 +33,16 @@ import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.easeui.widget.EaseTitleBar;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class UserProfileActivity extends BaseActivity  {
 
@@ -51,6 +58,8 @@ public class UserProfileActivity extends BaseActivity  {
     TextView tvUserinfoName;
 
     private ProgressDialog dialog;
+    User user=null;
+    IUserModel model=null;
 
 
 
@@ -60,6 +69,8 @@ public class UserProfileActivity extends BaseActivity  {
         setContentView(R.layout.em_activity_user_profile);
         ButterKnife.bind(this);
         initListener();
+        user=SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
+        model=new UserModel();
     }
     private void initListener() {
 
@@ -132,7 +143,35 @@ public class UserProfileActivity extends BaseActivity  {
 
     private void updateRemoteNick(final String nickName) {
         dialog = ProgressDialog.show(this, getString(R.string.dl_update_nick), getString(R.string.dl_waiting));
-        new Thread(new Runnable() {
+        model.upDateUserNick(UserProfileActivity.this, user.getMUserName(), nickName,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if(s!=null){
+                            Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                            if(result.getRetCode()== I.MSG_USER_SAME_NICK){
+                                CommonUtils.showShortToast(getString(R.string.dl_update_no_nick));
+                            }else if (result.getRetCode()==I.MSG_USER_UPDATE_NICK_FAIL){
+                                CommonUtils.showShortToast(getString(R.string.toast_updatenick_fail));
+                            }else if(result.isRetMsg()){
+                                Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_success), Toast.LENGTH_SHORT)
+                                        .show();
+                                tvUserinfoNick.setText(nickName);
+                                SuperWeChatHelper.getInstance().getUserProfileManager().updateCurrentAppUserNickName(nickName);
+                            }
+                        }
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
+                                .show();
+                        dialog.dismiss();
+                    }
+                });
+
+        /*new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -143,9 +182,7 @@ public class UserProfileActivity extends BaseActivity  {
                 if (!updatenick) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(UserProfileActivity.this, getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
-                                    .show();
-                            dialog.dismiss();
+
                         }
                     });
                 } else {
@@ -160,7 +197,7 @@ public class UserProfileActivity extends BaseActivity  {
                     });
                 }
             }
-        }).start();
+        }).start();*/
     }
 
     @Override
@@ -255,6 +292,8 @@ public class UserProfileActivity extends BaseActivity  {
                 break;
             case R.id.layout_userinfo_nick:
                 final EditText editText = new EditText(this);
+                editText.setText(user.getMUserNick());
+                editText.selectAll();
                 new Builder(this).setTitle(R.string.setting_nickname).setIcon(android.R.drawable.ic_dialog_info).setView(editText)
                         .setPositiveButton(R.string.dl_ok, new DialogInterface.OnClickListener() {
 
@@ -265,6 +304,7 @@ public class UserProfileActivity extends BaseActivity  {
                                     Toast.makeText(UserProfileActivity.this, getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
+
                                 updateRemoteNick(nickString);
                             }
                         }).setNegativeButton(R.string.dl_cancel, null).show();

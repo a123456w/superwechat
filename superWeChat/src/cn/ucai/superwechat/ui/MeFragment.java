@@ -83,6 +83,8 @@ public class MeFragment extends EaseBaseFragment {
         unbinder.unbind();
     }
 
+
+
     @OnClick({R.id.layout_profile_view, R.id.tv_profile_money, R.id.tv_profile_settings})
     public void onViewClicked(View view) {
         switch (view.getId()) {

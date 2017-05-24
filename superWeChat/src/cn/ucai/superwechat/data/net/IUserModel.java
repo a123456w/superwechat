@@ -15,7 +15,7 @@ public interface IUserModel {
     void registers(Context context, String username, String usernick, String password, OnCompleteListener<String> listener);
     void unRegister(Context context, String username, OnCompleteListener<String> listener);
     void loadUserInfo(Context context, String username , OnCompleteListener<String> listener);
-    void upDateUserNick(Context context, String username, String usernick, OnCompleteListener listener);
+    void upDateUserNick(Context context, String username, String usernick, OnCompleteListener<String> listener);
     void updateAvatar(Context context, String name, String avatartype, File file, OnCompleteListener<String> listener);
     
 }

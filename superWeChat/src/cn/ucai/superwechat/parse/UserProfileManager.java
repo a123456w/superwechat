@@ -155,6 +155,13 @@ public class UserProfileManager {
 		}
 		return isSuccess;
 	}
+	public boolean updateCurrentAppUserNickName(final String nickname) {
+		boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
+		if (isSuccess) {
+			setCurrentAppUserNick(nickname);
+		}
+		return isSuccess;
+	}
 	public String uploadUserAvatar(byte[] data) {
 		String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
 		if (avatarUrl != null) {

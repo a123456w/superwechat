@@ -43,7 +43,7 @@ public class UserModel implements IUserModel {
     }
 
     @Override
-    public void upDateUserNick(Context context, String username, String usernick, OnCompleteListener listener) {
+    public void upDateUserNick(Context context, String username, String usernick, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
                 .addParam(I.User.USER_NAME,username)
