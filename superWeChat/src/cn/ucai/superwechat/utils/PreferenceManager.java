@@ -16,6 +16,7 @@ package cn.ucai.superwechat.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class PreferenceManager {
 	/**
@@ -200,6 +201,7 @@ public class PreferenceManager {
 	}
 
 	public void setCurrentUserAvatar(String avatar) {
+		Log.i("main", "PreferenceManager.avatar:" + avatar);
 		editor.putString(SHARED_KEY_CURRENTUSER_AVATAR, avatar);
 		editor.apply();
 	}

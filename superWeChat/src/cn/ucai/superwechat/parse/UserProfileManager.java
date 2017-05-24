@@ -1,22 +1,26 @@
 package cn.ucai.superwechat.parse;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 
 import cn.ucai.easeui.domain.User;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.data.OkHttpUtils;
 import cn.ucai.superwechat.data.Result;
 import cn.ucai.superwechat.data.net.IUserModel;
 import cn.ucai.superwechat.data.net.OnCompleteListener;
 import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.ui.UserProfileActivity;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.superwechat.utils.ResultUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,7 +147,8 @@ public class UserProfileManager {
 			String nick = getCurrentUserNick();
 			currentAppUser.setMUserNick((nick != null) ? nick : username);
 			currentAppUser.setAvater(getCurrentUserAvatar());
-		}
+            Log.i("main", "UserProfileManager.user.avatar:" + getCurrentUserAvatar());
+        }
 		return currentAppUser;
 	}
 
@@ -169,6 +174,36 @@ public class UserProfileManager {
 		}
 		return avatarUrl;
 	}
+	public void uploadAppUserAvatar(File file) {
+		model.updateAvatar(appContext, EMClient.getInstance().getCurrentUser(), I.AVATAR_TYPE_USER_PATH,
+				file, new OnCompleteListener<String>() {
+					@Override
+					public void onSuccess(String s) {
+                        Log.i("main",s.toString());
+						boolean isSuccess=false;
+						if(s!=null){
+							Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+							if(result!=null&&result.isRetMsg()){
+                                User user = result.getRetData();
+                                if(user!=null){
+                                    isSuccess=true;
+                                    setCurrentAppUserAvatar(user.getAvatar());
+                                }
+							}
+						}
+                        appContext.sendBroadcast(new Intent(I.BROADCAST_UPDATE_AVATAR)
+                                .putExtra(I.RESULT_UPDATE_AVATAR,isSuccess));
+
+					}
+
+					@Override
+					public void onError(String error) {
+                        appContext.sendBroadcast(new Intent(I.BROADCAST_UPDATE_AVATAR)
+                                .putExtra(I.RESULT_UPDATE_AVATAR,false));
+					}
+				});
+	}
+
 	public  void asyncGetCurrentAppUserInfo(){
 		model.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
 			@Override
@@ -179,7 +214,8 @@ public class UserProfileManager {
 					if(result!=null){
 						if(result.isRetMsg()){
 							User user = result.getRetData();
-							if(user!=null){
+                            Log.i("main", "UserProfileManager.loaduserinfo.user.avatar:" + user.getAvatar());
+                            if(user!=null){
 								setCurrentAppUserNick(user.getMUserNick());
 								setCurrentAppUserAvatar(user.getAvatar());
 							}

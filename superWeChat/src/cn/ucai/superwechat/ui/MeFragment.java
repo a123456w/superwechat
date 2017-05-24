@@ -20,6 +20,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.ui.EaseBaseFragment;
+import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.easeui.widget.EaseTitleBar;
 import cn.ucai.superwechat.Constant;
 import cn.ucai.superwechat.R;
@@ -56,19 +57,14 @@ public class MeFragment extends EaseBaseFragment {
     protected void setUpView() {
         titleBar.setRightImageResource(R.drawable.em_add);
         titleBar.setTitle(getString(R.string.me));
-        updata();
     }
 
-    private void updata() {
-        User user = SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
-        if (user != null) {
-            tvName.setText("微信号 :" + user.getMUserName());
-            tvNick.setText(user.getMUserNick());
-            if (!TextUtils.isEmpty(user.getAvatar())) {
-                Glide.with(getContext()).load(user.getAvatar()).placeholder(R.drawable.em_default_avatar).into(ivAvatar);
-            } else {
-                Glide.with(getContext()).load(R.drawable.em_default_avatar).into(ivAvatar);
-            }
+    private void loadUserInfo() {
+        String name=EMClient.getInstance().getCurrentUser();
+        if(name!=null){
+            tvName.setText("微信号: "+EMClient.getInstance().getCurrentUser());
+            EaseUserUtils.setAppUserNick(name, tvNick);
+            EaseUserUtils.setAppUserAvatar(getContext(), name, ivAvatar);
         }
     }
 
@@ -88,7 +84,7 @@ public class MeFragment extends EaseBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        updata();
+        loadUserInfo();
     }
 
     @OnClick({R.id.layout_profile_view, R.id.tv_profile_money, R.id.tv_profile_settings})
