@@ -2,6 +2,8 @@ package cn.ucai.superwechat.data.net;
 
 import android.content.Context;
 
+import java.io.File;
+
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.data.OkHttpUtils;
 
@@ -46,6 +48,18 @@ public class UserModel implements IUserModel {
         utils.setRequestUrl(I.REQUEST_UPDATE_USER_NICK)
                 .addParam(I.User.USER_NAME,username)
                 .addParam(I.User.NICK,usernick)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+
+    @Override
+    public void updateAvatar(Context context, String name, String avatartype, File file, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils = new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UPDATE_AVATAR)
+                .addParam(I.NAME_OR_HXID,name)
+                .addParam(I.AVATAR_TYPE,avatartype)
+                .post()
+                .addFile2(file)
                 .targetClass(String.class)
                 .execute(listener);
     }

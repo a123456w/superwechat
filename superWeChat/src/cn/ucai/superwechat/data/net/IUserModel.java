@@ -2,6 +2,8 @@ package cn.ucai.superwechat.data.net;
 
 import android.content.Context;
 
+import java.io.File;
+
 import cn.ucai.superwechat.data.OkHttpUtils;
 import okhttp3.OkHttpClient;
 
@@ -14,5 +16,6 @@ public interface IUserModel {
     void unRegister(Context context, String username, OnCompleteListener<String> listener);
     void loadUserInfo(Context context, String username , OnCompleteListener<String> listener);
     void upDateUserNick(Context context, String username, String usernick, OnCompleteListener listener);
+    void updateAvatar(Context context, String name, String avatartype, File file, OnCompleteListener<String> listener);
     
 }

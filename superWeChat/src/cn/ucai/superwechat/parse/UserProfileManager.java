@@ -11,6 +11,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.data.OkHttpUtils;
 import cn.ucai.superwechat.data.Result;
 import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
 import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.easeui.domain.EaseUser;
@@ -162,7 +163,7 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 	public  void asyncGetCurrentAppUserInfo(){
-		model.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OkHttpUtils.OnCompleteListener<String>() {
+		model.loadUserInfo(appContext, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
 			@Override
 			public void onSuccess(String s) {
 				Log.i("main","asyncGetCurrentAppUserInfo,s="+s.toString());
