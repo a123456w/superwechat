@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient;
 public interface IUserModel {
     void registers(Context context, String username, String usernick, String password, OnCompleteListener<String> listener);
     void unRegister(Context context, String username, OnCompleteListener<String> listener);
-    void loadUserInfo(Context context, String username , OkHttpUtils.OnCompleteListener<String> listener);
+    void loadUserInfo(Context context, String username , OnCompleteListener<String> listener);
+    void upDateUserNick(Context context, String username, String usernick, OnCompleteListener listener);
     
 }
