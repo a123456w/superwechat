@@ -241,12 +241,9 @@ public class RegisterActivity extends BaseActivity {
             pd.dismiss();
         }
     }
-    @OnClick({R.id.tvTitles_back, R.id.bt_register})
+    @OnClick({ R.id.bt_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tvTitles_back:
-                MFGT.finish(RegisterActivity.this);
-                break;
             case R.id.bt_register:
                 register(view);
                 break;
