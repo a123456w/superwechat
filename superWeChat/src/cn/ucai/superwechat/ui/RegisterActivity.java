@@ -46,8 +46,6 @@ import cn.ucai.superwechat.utils.ResultUtils;
  */
 public class RegisterActivity extends BaseActivity {
 
-    @BindView(R.id.tvTitles_back)
-    TextView tvTitlesBack;
     @BindView(R.id.username)
     EditText userNameEditText;
     @BindView(R.id.usernick)
@@ -67,14 +65,24 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_register);
         bind = ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
         initData();
+        initView();
+    }
+
+    private void initView() {
+        titleBar.setTitle(getString(R.string.register));
+        titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initData() {
-        tvTitlesBack.setVisibility(View.VISIBLE);
         model = new UserModel();
     }
 

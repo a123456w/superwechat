@@ -18,15 +18,19 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import cn.ucai.easeui.ui.EaseBaseActivity;
+import cn.ucai.easeui.widget.EaseTitleBar;
+import cn.ucai.superwechat.R;
 
 import com.umeng.analytics.MobclickAgent;
 
 @SuppressLint("Registered")
 public class BaseActivity extends EaseBaseActivity {
 
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+
     }
 
     @Override

@@ -47,8 +47,6 @@ import cn.ucai.superwechat.db.superwechatDBManager;
 public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
     public static final int REQUEST_CODE_SETNICK = 1;
-    @BindView(R.id.ivTitles_ivback)
-    ImageView ivTitlesIvback;
     @BindView(R.id.username)
     EditText usernameEditText;
     @BindView(R.id.password)
@@ -58,6 +56,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.em_activity_login);
+        ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         // enter the main activity if already logged in
         if (SuperWeChatHelper.getInstance().isLoggedIn()) {
@@ -65,8 +65,6 @@ public class LoginActivity extends BaseActivity {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             return;
         }
-        setContentView(R.layout.em_activity_login);
-        ButterKnife.bind(this);
         initView();
 
         // if user changed, clear the password
@@ -77,7 +75,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
-        ivTitlesIvback.setVisibility(View.VISIBLE);
+        titleBar.setTitle(getString(R.string.login));
+        titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void setListener() {
