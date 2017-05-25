@@ -36,6 +36,8 @@
     
     <declare-styleable name="EaseTitleBar">
         <attr name="titleBarTitle" format="string"/>
+        <attr name="leftText" format="string"/>
+        <attr name="rightText" format="string"/>
         <attr name="titleBarLeftImage" format="reference"/>
         <attr name="titleBarRightImage" format="reference"/>
         <attr name="titleBarBackground" format="reference|color"/>

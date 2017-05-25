@@ -47,7 +47,21 @@ public class EaseBaseActivity extends FragmentActivity {
         titleBar = (EaseTitleBar)findViewById(com.hyphenate.easeui.R.id.title_bar);
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
-    
+    public void showTitleBarBack(){
+        if(titleBar!=null){
+            if(titleBar.getLeftImage()){
+                titleBar.getLeftLayout().setEnabled(true);
+                titleBar.getLeftLayout().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
+            }else {
+                titleBar.getLeftLayout().setEnabled(false);
+            }
+        }
+    }
 
     @Override
     protected void onResume() {

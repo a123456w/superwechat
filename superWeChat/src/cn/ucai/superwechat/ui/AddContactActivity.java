@@ -48,6 +48,7 @@ public class AddContactActivity extends BaseActivity {
         editText = (EditText) findViewById(R.id.edit_note);
         searchedUserLayout = (RelativeLayout) findViewById(R.id.ll_user);
         initView();
+        showTitleBarBack();
     }
 
     private void initView() {

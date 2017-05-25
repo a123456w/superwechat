@@ -22,6 +22,8 @@ public class EaseTitleBar extends RelativeLayout{
     protected RelativeLayout rightLayout;
     protected ImageView rightImage;
     protected TextView titleView;
+    protected TextView leftText;
+    protected TextView rightText;
     protected RelativeLayout titleLayout;
 
     public EaseTitleBar(Context context, AttributeSet attrs, int defStyle) {
@@ -40,6 +42,8 @@ public class EaseTitleBar extends RelativeLayout{
     
     private void init(Context context, AttributeSet attrs){
         LayoutInflater.from(context).inflate(R.layout.ease_widget_title_bar, this);
+        leftText= (TextView) findViewById(R.id.left_Text);
+        rightText= (TextView) findViewById(R.id.right_Text);
         leftLayout = (RelativeLayout) findViewById(R.id.left_layout);
         leftImage = (ImageView) findViewById(R.id.left_image);
         rightLayout = (RelativeLayout) findViewById(R.id.right_layout);
@@ -55,7 +59,10 @@ public class EaseTitleBar extends RelativeLayout{
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseTitleBar);
             String title = ta.getString(R.styleable.EaseTitleBar_titleBarTitle);
             titleView.setText(title);
-            
+            String left = ta.getString(R.styleable.EaseTitleBar_leftText);
+            leftText.setText(left);
+            String right = ta.getString(R.styleable.EaseTitleBar_leftText);
+            rightText.setText(right);
             Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
             if (null != leftDrawable) {
                 leftImage.setImageDrawable(leftDrawable);
@@ -85,6 +92,9 @@ public class EaseTitleBar extends RelativeLayout{
     public void setLeftLayoutClickListener(OnClickListener listener){
         leftLayout.setOnClickListener(listener);
     }
+    public boolean getLeftImage(){
+        return leftImage==null?false:true;
+    }
     
     public void setRightLayoutClickListener(OnClickListener listener){
         rightLayout.setOnClickListener(listener);
@@ -112,5 +122,17 @@ public class EaseTitleBar extends RelativeLayout{
     
     public RelativeLayout getRightLayout(){
         return rightLayout;
+    }
+    public void setLeftText(String LeftText){
+        leftText.setText(LeftText);
+    }
+    public void setRightText(String RightText){
+        rightText.setText(RightText);
+    }
+    public void setLeftText(int LeftText){
+        leftText.setText(LeftText);
+    }
+    public void setRightText(int RightText){
+        rightText.setText(RightText);
     }
 }

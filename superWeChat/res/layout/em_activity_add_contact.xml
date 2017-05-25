@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_bar"
         app:titleBarTitle="@string/add_friend"
-        app:titleBarLeftImage="@drawable/icon_back"
+        app:titleBarLeftImage="@drawable/em_mm_title_back"
         app:rightText="@string/search"
         />
     <EditText

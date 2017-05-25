@@ -42,6 +42,7 @@ public class ContactDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         super.onCreate(arg0);
         initData();
+        showTitleBarBack();
     }
     private void initData() {
         user= (User) getIntent().getSerializableExtra(I.User.USER_NAME);
