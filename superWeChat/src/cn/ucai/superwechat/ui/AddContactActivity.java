@@ -14,19 +14,14 @@
 package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.hyphenate.chat.EMClient;
 
 import cn.ucai.easeui.domain.User;
-import cn.ucai.superwechat.SuperWeChatHelper;
 
 import cn.ucai.superwechat.R;
 
@@ -100,30 +95,31 @@ public class AddContactActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s) {
                         boolean isSuccess=false;
+                        User user=null;
                         if(s!=null){
                             Result<User> result = ResultUtils.getResultFromJson(s, User.class);
                             if(result!=null&&result.isRetMsg()){
-                                User user = result.getRetData();
+                                user = result.getRetData();
                                 if(user!=null){
                                     isSuccess=true;
                                 }
                             }
                         }
-                        showSearchResult(isSuccess);
+                        showSearchResult(isSuccess,user);
                     }
 
                     @Override
                     public void onError(String error) {
-                        showSearchResult(false);
+                        showSearchResult(false,null);
                     }
                 });
     }
 
-    private void showSearchResult(boolean isSuccess) {
+    private void showSearchResult(boolean isSuccess,User user ) {
         dismissDialog();
         searchedUserLayout.setVisibility(isSuccess?View.GONE:View.VISIBLE);
         if(isSuccess){
-
+            MFGT.gotoProfile(AddContactActivity.this,user);
         }
     }
 

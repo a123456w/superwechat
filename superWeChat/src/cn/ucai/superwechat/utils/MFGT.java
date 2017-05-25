@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
+import cn.ucai.easeui.domain.User;
+import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.ui.ContactDetailsActivity;
 import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
 import cn.ucai.superwechat.ui.MainActivity;
@@ -59,5 +62,10 @@ public class MFGT {
 
     public static void gotoProfile(Activity activity) {
         startActivity(activity, UserProfileActivity.class);
+    }
+    public static void gotoProfile(Activity activity,User user) {
+        startActivity(activity, new Intent(activity, ContactDetailsActivity.class)
+                .putExtra(I.User.USER_NAME,user)
+        );
     }
 }
