@@ -25,46 +25,54 @@ import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
 
+import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.SuperWeChatHelper;
 
 import cn.ucai.superwechat.R;
 
 import cn.ucai.easeui.widget.EaseAlertDialog;
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.IUserModel;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class AddContactActivity extends BaseActivity {
     private EditText editText;
     private RelativeLayout searchedUserLayout;
-    private TextView nameText;
-    private Button searchBtn;
     private String toAddUsername;
     private ProgressDialog progressDialog;
+    IUserModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_add_contact);
-        TextView mTextView = (TextView) findViewById(R.id.add_list_friends);
-
+        super.onCreate(savedInstanceState);
+        titleBar.setRightText(getString(R.string.search));
         editText = (EditText) findViewById(R.id.edit_note);
-        String strAdd = getResources().getString(R.string.add_friend);
-        mTextView.setText(strAdd);
-        String strUserName = getResources().getString(R.string.user_name);
-        editText.setHint(strUserName);
         searchedUserLayout = (RelativeLayout) findViewById(R.id.ll_user);
-        nameText = (TextView) findViewById(R.id.name);
-        searchBtn = (Button) findViewById(R.id.search);
+        initView();
     }
 
+    private void initView() {
+        model=new UserModel();
+        titleBar.setLeftLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        titleBar.setRightLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchContact();
+            }
+        });
+    }
 
-    /**
-     * search contact
-     * @param v
-     */
-    public void searchContact(View v) {
+    public void searchContact() {
         final String name = editText.getText().toString();
-        String saveText = searchBtn.getText().toString();
-
-        if (getString(R.string.button_search).equals(saveText)) {
             toAddUsername = name;
             if (TextUtils.isEmpty(name)) {
                 new EaseAlertDialog(this, R.string.Please_enter_a_username).show();
@@ -72,10 +80,49 @@ public class AddContactActivity extends BaseActivity {
             }
 
             // TODO you can search the user from your app server here.
-
+            searchContactFromAppService();
             //show the userame and add button if user exist
-            searchedUserLayout.setVisibility(View.VISIBLE);
-            nameText.setText(toAddUsername);
+        }
+    private void initDialog(){
+        progressDialog=new ProgressDialog(AddContactActivity.this);
+        progressDialog.setMessage(getString(R.string.searching));
+        progressDialog.show();
+    }
+    private void dismissDialog(){
+        if (progressDialog!=null&&progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+    }
+    private void searchContactFromAppService() {
+        initDialog();
+        model.loadUserInfo(AddContactActivity.this, toAddUsername,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean isSuccess=false;
+                        if(s!=null){
+                            Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                            if(result!=null&&result.isRetMsg()){
+                                User user = result.getRetData();
+                                if(user!=null){
+                                    isSuccess=true;
+                                }
+                            }
+                        }
+                        showSearchResult(isSuccess);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        showSearchResult(false);
+                    }
+                });
+    }
+
+    private void showSearchResult(boolean isSuccess) {
+        dismissDialog();
+        searchedUserLayout.setVisibility(isSuccess?View.GONE:View.VISIBLE);
+        if(isSuccess){
 
         }
     }
@@ -84,7 +131,7 @@ public class AddContactActivity extends BaseActivity {
      *  add contact
      * @param view
      */
-    public void addContact(View view) {
+   /* public void addContact(View view) {
         if (EMClient.getInstance().getCurrentUser().equals(nameText.getText().toString())) {
             new EaseAlertDialog(this, R.string.not_add_myself).show();
             return;
@@ -131,9 +178,6 @@ public class AddContactActivity extends BaseActivity {
                 }
             }
         }).start();
-    }
+    }*/
 
-    public void back(View v) {
-        finish();
-    }
 }

@@ -110,6 +110,7 @@ public class ContactListFragment extends EaseContactListFragment {
                 NetUtils.hasDataConnection(getActivity());
             }
         });
+
         //设置联系人数据
         Map<String, EaseUser> m = SuperWeChatHelper.getInstance().getContactList();
         if (m instanceof Hashtable<?, ?>) {
