@@ -2,6 +2,7 @@ package cn.ucai.superwechat;
 
 import android.content.Context;
 
+import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.utils.PreferenceManager;
@@ -28,15 +29,28 @@ public class SuperWeChatModel {
         dao.saveContactList(contactList);
         return true;
     }
+    public boolean saveAppContactList(List<User> contactList) {
+        UserDao dao = new UserDao(context);
+        dao.saveAppContactList(contactList);
+        return true;
+    }
 
     public Map<String, EaseUser> getContactList() {
         UserDao dao = new UserDao(context);
         return dao.getContactList();
     }
+    public Map<String, User> getAppContactList() {
+        UserDao dao = new UserDao(context);
+        return dao.getAppContactList();
+    }
 
     public void saveContact(EaseUser user) {
         UserDao dao = new UserDao(context);
         dao.saveContact(user);
+    }
+    public void saveAppContact(User user) {
+        UserDao dao = new UserDao(context);
+        dao.saveAppContact(user);
     }
 
     /**
@@ -291,6 +305,7 @@ public class SuperWeChatModel {
     public String getCutomAppkey() {
         return PreferenceManager.getInstance().getCustomAppkey();
     }
+
 
     enum Key {
         VibrateAndPlayToneOn,

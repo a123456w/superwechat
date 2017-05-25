@@ -18,6 +18,7 @@ import java.util.Map;
 
 import android.content.Context;
 
+import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.easeui.domain.EaseUser;
 
@@ -48,6 +49,9 @@ public class UserDao {
     public void saveContactList(List<EaseUser> contactList) {
         superwechatDBManager.getInstance().saveContactList(contactList);
     }
+    public void saveAppContactList(List<User> contactList) {
+        superwechatDBManager.getInstance().saveAppContactList(contactList);
+    }
 
     /**
      * get contact list
@@ -55,8 +59,10 @@ public class UserDao {
      * @return
      */
     public Map<String, EaseUser> getContactList() {
-
         return superwechatDBManager.getInstance().getContactList();
+    }
+    public Map<String, User> getAppContactList() {
+        return superwechatDBManager.getInstance().getAppContactList();
     }
 
     /**
@@ -73,6 +79,9 @@ public class UserDao {
      */
     public void saveContact(EaseUser user) {
         superwechatDBManager.getInstance().saveContact(user);
+    }
+    public void saveAppContact(User user) {
+        superwechatDBManager.getInstance().saveAppContact(user);
     }
 
     public void setDisabledGroups(List<String> groups) {

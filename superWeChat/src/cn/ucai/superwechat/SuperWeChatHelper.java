@@ -91,6 +91,7 @@ public class SuperWeChatHelper {
     protected EMMessageListener messageListener = null;
 
     private Map<String, EaseUser> contactList;
+    private Map<String, User> appContactList;
 
     private Map<String, RobotUser> robotList;
 
@@ -1008,6 +1009,16 @@ public class SuperWeChatHelper {
 
         contactList = aContactList;
     }
+    public void setAppContactList(Map<String, User> aContactList) {
+        if (aContactList == null) {
+            if (appContactList != null) {
+                appContactList.clear();
+            }
+            return;
+        }
+
+        appContactList = aContactList;
+    }
 
     /**
      * save single contact
@@ -1015,6 +1026,10 @@ public class SuperWeChatHelper {
     public void saveContact(EaseUser user) {
         contactList.put(user.getUsername(), user);
         demoModel.saveContact(user);
+    }
+    public void saveAppContact(User user) {
+        appContactList.put(user.getMUserName(), user);
+        demoModel.saveAppContact(user);
     }
 
     /**
@@ -1033,6 +1048,18 @@ public class SuperWeChatHelper {
         }
 
         return contactList;
+    }
+    public Map<String, User> getAppContactList() {
+        if (isLoggedIn() && appContactList == null) {
+            appContactList = demoModel.getAppContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if (appContactList == null) {
+            return new Hashtable<String, User>();
+        }
+
+        return appContactList;
     }
 
     /**
@@ -1078,6 +1105,14 @@ public class SuperWeChatHelper {
         ArrayList<EaseUser> mList = new ArrayList<EaseUser>();
         mList.addAll(contactList.values());
         demoModel.saveContactList(mList);
+    }
+    public void updateAppContactList(List<User> contactInfoList) {
+        for (User u : contactInfoList) {
+            appContactList.put(u.getMUserName(), u);
+        }
+        ArrayList<User> mList = new ArrayList<User>();
+        mList.addAll(appContactList.values());
+        demoModel.saveAppContactList(mList);
     }
 
     public UserProfileManager getUserProfileManager() {

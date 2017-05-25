@@ -1,19 +1,15 @@
 package cn.ucai.superwechat.ui;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.ucai.easeui.domain.EaseUser;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.superwechat.I;
@@ -60,7 +56,7 @@ public class ContactDetailsActivity extends BaseActivity {
         tvUserinfoName.setText(user.getMUserName());
         EaseUserUtils.setAppUserNick(user,tvUserinfoNick);
         EaseUserUtils.setAppUserAvatar(ContactDetailsActivity.this,user,profileImage);
-        showButton(SuperWeChatHelper.getInstance().getContactList().containsKey(user.getMUserName()));
+        showButton(SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName()));
     }
 
     private void showButton(boolean isContact) {
