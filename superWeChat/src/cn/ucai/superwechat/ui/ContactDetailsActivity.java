@@ -7,14 +7,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.utils.MFGT;
 
 /**
  * Created by Administrator on 2017/5/25 0025.
@@ -42,26 +43,32 @@ public class ContactDetailsActivity extends BaseActivity {
         initData();
         showTitleBarBack();
     }
+
     private void initData() {
-        user= (User) getIntent().getSerializableExtra(I.User.USER_NAME);
-        Log.i("main",user.toString());
-        if(user!=null){
+        user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+        Log.i("main", user.toString());
+        if (user != null) {
             showView();
-        }else{
+        } else {
             finish();
         }
     }
 
     private void showView() {
         tvUserinfoName.setText(user.getMUserName());
-        EaseUserUtils.setAppUserNick(user,tvUserinfoNick);
-        EaseUserUtils.setAppUserAvatar(ContactDetailsActivity.this,user,profileImage);
+        EaseUserUtils.setAppUserNick(user, tvUserinfoNick);
+        EaseUserUtils.setAppUserAvatar(ContactDetailsActivity.this, user, profileImage);
         showButton(SuperWeChatHelper.getInstance().getAppContactList().containsKey(user.getMUserName()));
     }
 
     private void showButton(boolean isContact) {
-        btnAddContact.setVisibility(isContact? View.GONE:View.VISIBLE);
-        btnSendMsg.setVisibility(isContact?View.VISIBLE:View.GONE);
-        btnSendVideo.setVisibility(isContact?View.VISIBLE:View.GONE);
+        btnAddContact.setVisibility(isContact ? View.GONE : View.VISIBLE);
+        btnSendMsg.setVisibility(isContact ? View.VISIBLE : View.GONE);
+        btnSendVideo.setVisibility(isContact ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.btn_add_contact)
+    public void onViewClicked() {
+        MFGT.gotoProfiles(ContactDetailsActivity.this,user.getMUserName());
     }
 }

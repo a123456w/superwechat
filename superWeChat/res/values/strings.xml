@@ -59,6 +59,7 @@
     <string name="userinfo_txt_nosettings">未设置</string>
     <string name="userinfo_txt_note_mark">设置备注和标签</string>
     <string name="userinfo_btn_add_contact">添加到通讯录</string>
+    <string name="userinfo_btn_send_add_contact">发送好友申请</string>
     <string name="userinfo_btn_send_msg">发消息</string>
     <string name="userinfo_btn_send_video">视频聊天</string>
     <string name="userinfo_txt_wechat_no">微信号:</string>
@@ -103,4 +104,5 @@
     <string name="setting_txt_about">关于微信</string>
     <string name="setting_btn_exit">退出登录</string>
     <string name="msg_1">msg_1</string>
+    <string name="em_act_yz">验证申请</string>
 </resources>

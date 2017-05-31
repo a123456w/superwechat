@@ -281,6 +281,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" />
         <activity
+            android:name=".ui.AddContactsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/horizontal_slide" />
+        <activity
             android:name=".ui.SetServersActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" />
