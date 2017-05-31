@@ -55,7 +55,7 @@ public class User implements Serializable {
 	}
 
 	public String getMUserNick() {
-		return muserNick;
+		return muserNick==null?muserName:muserNick;
 	}
 
 	public void setMUserNick(String muserNick) {

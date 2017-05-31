@@ -32,6 +32,9 @@ import com.hyphenate.chat.EMMessage.Type;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
 
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.data.net.UserModel;
 import cn.ucai.superwechat.db.superwechatDBManager;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
@@ -57,6 +60,7 @@ import cn.ucai.easeui.model.EaseAtMessageHelper;
 import cn.ucai.easeui.model.EaseNotifier;
 import cn.ucai.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
 import cn.ucai.easeui.utils.EaseCommonUtils;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -136,6 +140,7 @@ public class SuperWeChatHelper {
     private LocalBroadcastManager broadcastManager;
 
     private boolean isGroupAndContactListenerRegisted;
+    private UserModel model;
 
     private SuperWeChatHelper() {
     }
@@ -155,6 +160,7 @@ public class SuperWeChatHelper {
     public void init(Context context) {
         demoModel = new SuperWeChatModel(context);
         EMOptions options = initChatOptions();
+        model=new UserModel();
         //use default options if options is null
         if (EaseUI.getInstance().init(context, options)) {
             appContext = context;
@@ -809,11 +815,39 @@ public class SuperWeChatHelper {
      *
      * @param msg
      */
-    private void notifyNewInviteMessage(InviteMessage msg) {
+    private void notifyNewInviteMessage(final InviteMessage msg) {
         if (inviteMessgeDao == null) {
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
-        inviteMessgeDao.saveMessage(msg);
+
+        model.loadUserInfo(appContext, msg.getFrom(), new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                User user=new User(msg.getFrom());
+                msg.setNickName(user.getMUserNick());
+                msg.setAvatar(user.getAvatar());
+                if(s!=null){
+
+                    Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                    if(result!=null&&result.isRetMsg()){
+                        user = result.getRetData();
+                        if(user!=null){
+                            msg.setNickName(user.getMUserNick());
+                            msg.setAvatar(user.getAvatar());
+                        }
+                    }
+                }
+                inviteMessgeDao.saveMessage(msg);
+            }
+
+            @Override
+            public void onError(String error) {
+                User user=new User(msg.getFrom());
+                msg.setNickName(user.getMUserNick());
+                msg.setAvatar(user.getAvatar());
+                inviteMessgeDao.saveMessage(msg);
+            }
+        });
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
