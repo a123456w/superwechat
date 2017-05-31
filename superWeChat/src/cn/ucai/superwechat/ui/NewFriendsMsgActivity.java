@@ -33,9 +33,9 @@ public class NewFriendsMsgActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_new_friends_msg);
-
+        super.onCreate(savedInstanceState);
+        showTitleBarBack();
         ListView listView = (ListView) findViewById(R.id.list);
         InviteMessgeDao dao = new InviteMessgeDao(this);
         List<InviteMessage> msgs = dao.getMessagesList();
@@ -43,10 +43,6 @@ public class NewFriendsMsgActivity extends BaseActivity {
         NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this, 1, msgs);
         listView.setAdapter(adapter);
         dao.saveUnreadMessageCount(0);
-
     }
 
-    public void back(View view) {
-        finish();
-    }
 }

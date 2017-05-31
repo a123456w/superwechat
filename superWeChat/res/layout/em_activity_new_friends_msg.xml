@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#f2f2f2"
     android:orientation="vertical">
 
@@ -12,7 +13,11 @@
         android:background="@color/top_bar_normal_bg"
         android:gravity="center_vertical">
 
-        <include layout="@layout/ease_commom_back_btn" />
+       <cn.ucai.easeui.widget.EaseTitleBar
+           android:id="@+id/title_bar"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           app:titleBarLeftImage="@drawable/icon_back"/>
 
         <TextView
             android:layout_width="wrap_content"
