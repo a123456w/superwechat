@@ -255,7 +255,7 @@ public class MainActivity extends BaseActivity {
      * init views
      */
     private void initView() {
-       /* unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
+        /*unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
         unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
         mTabs = new Button[3];
         mTabs[0] = (Button) findViewById(R.id.btn_conversation);
@@ -456,8 +456,8 @@ public class MainActivity extends BaseActivity {
      * update unread message count
      */
     public void updateUnreadLabel() {
-        int count = getUnreadMsgCountTotal();
-        /*if (count > 0) {
+     /*   int count = getUnreadMsgCountTotal();
+        if (count > 0) {
             unreadLabel.setText(String.valueOf(count));
             unreadLabel.setVisibility(View.VISIBLE);
         } else {
@@ -469,16 +469,12 @@ public class MainActivity extends BaseActivity {
      * update the total unread count
      */
     public void updateUnreadAddressLable() {
-        /*runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             public void run() {
                 int count = getUnreadAddressCountTotal();
-                if (count > 0) {
-                    unreadAddressLable.setVisibility(View.VISIBLE);
-                } else {
-                    unreadAddressLable.setVisibility(View.INVISIBLE);
-                }
+                layoutTabhost.setHasNew(1,count>0);
             }
-        });*/
+        });
 
     }
 
