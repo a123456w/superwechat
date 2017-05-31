@@ -35,6 +35,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import cn.ucai.superwechat.data.Result;
 import cn.ucai.superwechat.data.net.OnCompleteListener;
 import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.db.DbOpenHelper;
 import cn.ucai.superwechat.db.superwechatDBManager;
 import cn.ucai.superwechat.db.InviteMessgeDao;
 import cn.ucai.superwechat.db.UserDao;
@@ -519,7 +520,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
-
+            Log.i("main","SuperWeChatHelper.MyGroupChangeListener.onInvitationReceived reason="+reason);
             new InviteMessgeDao(appContext).deleteMessage(groupId);
 
             // user invite you to join group
@@ -538,7 +539,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onInvitationAccepted(String groupId, String invitee, String reason) {
-
+            Log.i("main","SuperWeChatHelper.MyGroupChangeListener.onInvitationAccepted reason="+reason);
             new InviteMessgeDao(appContext).deleteMessage(groupId);
 
             //user accept your invitation
@@ -569,7 +570,7 @@ public class SuperWeChatHelper {
 
         @Override
         public void onInvitationDeclined(String groupId, String invitee, String reason) {
-
+            Log.i("main","SuperWeChatHelper.onInvitationDeclined reason="+reason);
             new InviteMessgeDao(appContext).deleteMessage(groupId);
 
             //user declined your invitation
@@ -592,6 +593,7 @@ public class SuperWeChatHelper {
             msg.setGroupInviter(invitee);
             Log.d(TAG, invitee + "Declined to join the group：" + group.getGroupName());
             msg.setStatus(InviteMesageStatus.GROUPINVITATION_DECLINED);
+
             notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
@@ -599,11 +601,13 @@ public class SuperWeChatHelper {
         @Override
         public void onUserRemoved(String groupId, String groupName) {
             //user is removed from group
+            Log.i("main","SuperWeChatHelper.onUserRemoved reason=");
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
         @Override
         public void onGroupDestroyed(String groupId, String groupName) {
+            Log.i("main","SuperWeChatHelper.onUserRemoved reason=");
             // group is dismissed,
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
@@ -739,17 +743,9 @@ public class SuperWeChatHelper {
         @Override
         public void onContactAdded(String username) {
             // save contact
-            Map<String, EaseUser> localUsers = getContactList();
-            Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
-            EaseUser user = new EaseUser(username);
+            addContacted(username);
+            Log.i("main","MyContactListener.onContactAdded");
 
-            if (!localUsers.containsKey(username)) {
-                userDao.saveContact(user);
-            }
-            toAddUsers.put(username, user);
-            localUsers.putAll(toAddUsers);
-
-            broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
         @Override
@@ -808,6 +804,43 @@ public class SuperWeChatHelper {
             // your request was refused
             Log.d(username, username + " refused to your request");
         }
+    }
+
+    private void addContacted(String username) {
+
+        model = new UserModel();
+        model.addContact(appContext, EMClient.getInstance().getCurrentUser(), username
+                , new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if(s!=null){
+                            Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                            if(result!=null&&result.isRetMsg()){
+                                User user = result.getRetData();
+                                if(user!=null){
+                                    saveContact2(user);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                    }
+                });
+    }
+
+    private void saveContact2(User user) {
+
+        Map<String, User> localUsers = getAppContactList();
+        Map<String, User> toAddUsers = new HashMap<String, User>();
+        if (!localUsers.containsKey(user.getMUserName())) {
+            Log.i("main","user.toString="+user.toString());
+            userDao.saveAppContact(user);
+        }
+        toAddUsers.put(user.getMUserName(), user);
+        localUsers.putAll(toAddUsers);
+        broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
     }
 
     /**
