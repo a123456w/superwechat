@@ -88,7 +88,7 @@ public class RegisterActivity extends BaseActivity {
 
     public void register(View view) {
         username = userNameEditText.getText().toString().trim();
-        password = passwordEditText.getText().toString().trim();
+        password =passwordEditText.getText().toString().trim();
         nick = usernick.getText().toString().trim();
         confirm_pwd = confirmPwdEditText.getText().toString().trim();
         if (checkInput()) {
@@ -151,12 +151,12 @@ public class RegisterActivity extends BaseActivity {
     }
 
     public void HXResgister() {
-        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(MD5.getMessageDigest(password))) {
+        if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
                         // call method in SDK
-                        EMClient.getInstance().createAccount(username, password);
+                        EMClient.getInstance().createAccount(username, MD5.getMessageDigest(password));
                         runOnUiThread(new Runnable() {
                             public void run() {
                                 // save current user
