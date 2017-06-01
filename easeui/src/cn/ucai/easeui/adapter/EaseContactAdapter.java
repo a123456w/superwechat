@@ -70,6 +70,7 @@ public class EaseContactAdapter extends ArrayAdapter<User> implements SectionInd
         User user = getItem(position);
         if(user == null)
             Log.d("ContactAdapter", position + "");
+        Log.i("main","EaseContactAdapter.getView.user="+user);
         String username = user.getMUserName();
         String header = user.getInitialLetter();
         
@@ -83,9 +84,13 @@ public class EaseContactAdapter extends ArrayAdapter<User> implements SectionInd
         } else {
             holder.headerView.setVisibility(View.GONE);
         }
+        Log.i("main","EaseContactAdapter.EaseUserUtils.setAppUserNick(username, holder.nameView); username="+username);
+        EaseUserUtils.setAppUserNick(username, holder.nameView);
+        EaseUserUtils.setAppUserAvatar(getContext(), username, holder.avatar);
+        EaseUserUtils.setAppUserNick(username,holder.nameView);
 
-        EaseUserUtils.setUserNick(username, holder.nameView);
-        EaseUserUtils.setUserAvatar(getContext(), username, holder.avatar);
+
+
         
        
         if(primaryColor != 0)

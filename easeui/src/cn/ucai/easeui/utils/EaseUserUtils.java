@@ -64,12 +64,13 @@ public class EaseUserUtils {
     public static void setAppUserNick(String username,TextView textView){
         	User user = getAppUserInfo(username);
             setAppUserNick(user,textView);
+        Log.i("main","setAppUserNick.getAppUserInfo......user="+user+" //username="+username);
     }
     public static void setAppUserNick(User user,TextView textView){
         	if(user != null && user.getMUserNick() != null){
-        		setNick(user.getMUserNick(),textView);
+                textView.setText(user.getMUserNick());
         	}else if (user!=null){
-                setNick(user.getMUserName(),textView);
+                textView.setText(user.getMUserName());
         	}
     }
     public static void setNick(String username,TextView textView){

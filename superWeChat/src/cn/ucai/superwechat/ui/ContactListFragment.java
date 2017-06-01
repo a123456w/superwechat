@@ -250,6 +250,7 @@ public class ContactListFragment extends EaseContactListFragment {
         pd.setMessage(st1);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
+
         RemoveAppContact(tobeDeleteUser);
 
     }
@@ -261,12 +262,12 @@ public class ContactListFragment extends EaseContactListFragment {
                         boolean isSuccess=false;
                         if(s!=null){
                             Result result = ResultUtils.getResultFromJson(s, null);
-                            if(result!=null&&result.isRetMsg()){
+                            if(result!=null){
                                 isSuccess=true;
                                 // remove user from memory and database
                                 UserDao dao = new UserDao(getActivity());
                                 dao.deleteAppContact(tobeDeleteUser.getMUserName());
-                                SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
+                                SuperWeChatHelper.getInstance().getAppContactList().remove(tobeDeleteUser.getMUserName());
                                 RemoveContact(tobeDeleteUser);
                             }
                         }
@@ -289,9 +290,9 @@ public class ContactListFragment extends EaseContactListFragment {
                 try {
                     EMClient.getInstance().contactManager().deleteContact(tobeDeleteUser.getMUserName());
                     // remove user from memory and database
-//                    UserDao dao = new UserDao(getActivity());
-//                    dao.deleteContact(tobeDeleteUser.getMUserName());
-//                    SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
+                    UserDao dao = new UserDao(getActivity());
+                    dao.deleteContact(tobeDeleteUser.getMUserName());
+                    SuperWeChatHelper.getInstance().getContactList().remove(tobeDeleteUser.getMUserName());
                     getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             pd.dismiss();
