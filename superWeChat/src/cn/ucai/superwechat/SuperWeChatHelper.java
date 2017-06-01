@@ -866,10 +866,13 @@ public class SuperWeChatHelper {
                         user = result.getRetData();
                         if(user!=null){
                             msg.setNickName(user.getMUserNick());
+                            Log.i("main","Superwechathelper.loadInfo.user.getMUserNick="+user.getMUserNick());
                             msg.setAvatar(user.getAvatar());
+                            Log.i("main","Superwechathelper.loadInfo.user.getAvatar="+user.getAvatar());
                         }
                     }
                 }
+                Log.i("main","Superwechathelper.loadInfo.msg.toString="+msg.getNickName());
                 inviteMessgeDao.saveMessage(msg);
             }
 

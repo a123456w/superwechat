@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+
+import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.R;
 
 import cn.ucai.easeui.adapter.EaseContactAdapter;
@@ -70,20 +72,20 @@ public class PickAtUserActivity extends BaseActivity {
 
     void updateList() {
         List<String> members = group.getMembers();
-        List<EaseUser> userList = new ArrayList<EaseUser>();
+        List<User> userList = new ArrayList<User>();
         members.addAll(group.getAdminList());
         members.add(group.getOwner());
         for (String username : members) {
-            EaseUser user = EaseUserUtils.getUserInfo(username);
+            User user = EaseUserUtils.getAppUserInfo(username);
             userList.add(user);
         }
 
-        Collections.sort(userList, new Comparator<EaseUser>() {
+        Collections.sort(userList, new Comparator<User>() {
 
             @Override
-            public int compare(EaseUser lhs, EaseUser rhs) {
+            public int compare(User lhs, User rhs) {
                 if (lhs.getInitialLetter().equals(rhs.getInitialLetter())) {
-                    return lhs.getNick().compareTo(rhs.getNick());
+                    return lhs.getMUserNick().compareTo(rhs.getMUserNick());
                 } else {
                     if ("#".equals(lhs.getInitialLetter())) {
                         return 1;
@@ -148,7 +150,7 @@ public class PickAtUserActivity extends BaseActivity {
 
     private class PickUserAdapter extends EaseContactAdapter {
 
-        public PickUserAdapter(Context context, int resource, List<EaseUser> objects) {
+        public PickUserAdapter(Context context, int resource, List<User> objects) {
             super(context, resource, objects);
         }
     }
