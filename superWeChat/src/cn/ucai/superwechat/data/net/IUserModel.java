@@ -19,5 +19,6 @@ public interface IUserModel {
     void updateAvatar(Context context, String name, String avatartype, File file, OnCompleteListener<String> listener);
     void addContact(Context context, String username, String cname, OnCompleteListener<String> listener);
     void removeContact(Context context, String username, String cname, OnCompleteListener<String> listener);
+    void loadContactAllList(Context context, String username,OnCompleteListener<String> listener);
 
 }
