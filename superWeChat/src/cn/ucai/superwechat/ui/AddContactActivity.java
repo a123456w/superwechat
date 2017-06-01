@@ -99,7 +99,7 @@ public class AddContactActivity extends BaseActivity {
                         User user=null;
                         if(s!=null){
                             Result<User> result = ResultUtils.getResultFromJson(s, User.class);
-                            if(result!=null&&result.isRetMsg()){
+                            if(result!=null){
                                 user = result.getRetData();
                                 if(user!=null){
                                     isSuccess=true;

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.Constant;
@@ -137,6 +138,12 @@ public class superwechatDBManager {
             db.delete(UserDao.TABLE_NAME, UserDao.COLUMN_NAME_ID + " = ?", new String[]{username});
         }
     }
+    synchronized public void deleteAppContact(String username) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (db.isOpen()) {
+            db.delete(UserDao.TABLE_NAME, UserDao.COLUMN_NAME_ID + " = ?", new String[]{username});
+        }
+    }
 
     /**
      * save a contact
@@ -159,10 +166,15 @@ public class superwechatDBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(UserDao.COLUMN_NAME_ID, user.getMUserName());
-        if (user.getMUserNick() != null)
+        Log.i("main","SuperwechatDBManager.saveAppContact.user.getMUserName()="+user.getMUserName());
+        if (user.getMUserNick() != null) {
             values.put(UserDao.COLUMN_NAME_NICK, user.getMUserNick());
-        if (user.getAvatar() != null)
+            Log.i("main","SuperwechatDBManager.saveAppContact.user.getMUserNick()="+user.getMUserNick());
+        }
+        if (user.getAvatar() != null) {
             values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
+            Log.i("main","SuperwechatDBManager.saveAppContact.user.getAvatar()="+user.getAvatar());
+        }
         if (db.isOpen()) {
             db.replace(UserDao.TABLE_NAME, null, values);
         }

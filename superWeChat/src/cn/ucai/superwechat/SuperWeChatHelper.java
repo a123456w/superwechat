@@ -816,8 +816,10 @@ public class SuperWeChatHelper {
                         if(s!=null){
                             Result<User> result = ResultUtils.getResultFromJson(s, User.class);
                             if(result!=null&&result.isRetMsg()){
+                                Log.i("main","addContacted.addContact.result.isRetMsg()="+result.isRetMsg());
                                 User user = result.getRetData();
                                 if(user!=null){
+                                    Log.i("main","addContacted.addContact.user="+user.toString());
                                     saveContact2(user);
                                 }
                             }

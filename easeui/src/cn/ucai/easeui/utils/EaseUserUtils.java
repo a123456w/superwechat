@@ -38,9 +38,9 @@ public class EaseUserUtils {
      * @return
      */
     public static User getAppUserInfo(String username){
-        if(userProvider != null)
+        if(userProvider != null) {
             return userProvider.getAppUser(username);
-
+        }
         return null;
     }
 
