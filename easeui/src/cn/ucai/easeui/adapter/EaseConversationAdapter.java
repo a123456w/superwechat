@@ -21,6 +21,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.R;
 import cn.ucai.easeui.domain.EaseUser;
+import cn.ucai.easeui.domain.User;
 import cn.ucai.easeui.model.EaseAtMessageHelper;
 import cn.ucai.easeui.utils.EaseCommonUtils;
 import cn.ucai.easeui.utils.EaseSmileUtils;
@@ -239,10 +240,11 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                     if(group != null){
                         username = group.getGroupName();
                     }else{
-                        EaseUser user = EaseUserUtils.getUserInfo(username);
+                        //EaseUser user = EaseUserUtils.getUserInfo(username);
+                        User user = EaseUserUtils.getAppUserInfo(username);
                         // TODO: not support Nick anymore
-//                        if(user != null && user.getNick() != null)
-//                            username = user.getNick();
+                       if(user != null && user.getMUserNick() != null)
+                           username = user.getMUserNick();
                     }
 
                     // First match against the whole ,non-splitted value
