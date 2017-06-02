@@ -36,7 +36,9 @@ public class ConversationListFragment extends EaseConversationListFragment{
         errorItemContainer.addView(errorView);
         errorText = (TextView) errorView.findViewById(R.id.tv_connect_errormsg);
     }
-    
+
+
+
     @Override
     protected void setUpView() {
         super.setUpView();

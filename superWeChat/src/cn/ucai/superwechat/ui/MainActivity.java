@@ -254,7 +254,9 @@ public class MainActivity extends BaseActivity {
     /**
      * init views
      */
+
     private void initView() {
+
         /*unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
         unreadAddressLable = (TextView) findViewById(R.id.unread_address_number);
         mTabs = new Button[3];
@@ -510,7 +512,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+       /* String ggg = getIntent().getStringExtra("ggg");
+        if(ggg!=null){
+            layoutTabhost.setChecked(0);
+            notify();
+        }*/
+        layoutTabhost.setChecked(0);
         if (!isConflict && !isCurrentAccountRemoved) {
             updateUnreadLabel();
             updateUnreadAddressLable();

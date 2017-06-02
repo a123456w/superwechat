@@ -72,7 +72,7 @@ public class MFGT {
     }
     public static void gotoProfile(Activity activity,User user) {
         startActivity(activity, new Intent(activity, ContactDetailsActivity.class)
-                .putExtra(I.User.USER_NAME,user)
+                .putExtra(I.User.TABLE_NAME,user)
         );
     }
     public static void gotoProfile(Activity activity,String userName) {
