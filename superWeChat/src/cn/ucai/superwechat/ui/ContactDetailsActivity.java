@@ -1,7 +1,6 @@
 package cn.ucai.superwechat.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,8 +44,13 @@ public class ContactDetailsActivity extends BaseActivity {
     }
 
     private void initData() {
-        user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
-        Log.i("main", user.toString());
+        String userName = getIntent().getStringExtra(I.User.USER_NAME);
+        if (userName != null) {
+            user = SuperWeChatHelper.getInstance().getAppContactList().get(userName);
+        }
+        if (user == null) {
+            user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+        }
         if (user != null) {
             showView();
         } else {
@@ -69,6 +73,16 @@ public class ContactDetailsActivity extends BaseActivity {
 
     @OnClick(R.id.btn_add_contact)
     public void onViewClicked() {
-        MFGT.gotoProfiles(ContactDetailsActivity.this,user.getMUserName());
+        MFGT.gotoProfiles(ContactDetailsActivity.this, user.getMUserName());
+    }
+
+    @OnClick({R.id.btn_send_msg, R.id.btn_send_video})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_send_msg:
+                break;
+            case R.id.btn_send_video:
+                break;
+        }
     }
 }
