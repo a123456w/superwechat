@@ -61,7 +61,7 @@ public class EaseTitleBar extends RelativeLayout{
             titleView.setText(title);
             String left = ta.getString(R.styleable.EaseTitleBar_leftText);
             leftText.setText(left);
-            String right = ta.getString(R.styleable.EaseTitleBar_leftText);
+            String right = ta.getString(R.styleable.EaseTitleBar_rightText);
             rightText.setText(right);
             Drawable leftDrawable = ta.getDrawable(R.styleable.EaseTitleBar_titleBarLeftImage);
             if (null != leftDrawable) {

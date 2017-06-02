@@ -237,6 +237,7 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                     String username = value.conversationId();
                     
                     EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+                    String usernick="";
                     if(group != null){
                         username = group.getGroupName();
                     }else{
@@ -244,11 +245,10 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                         User user = EaseUserUtils.getAppUserInfo(username);
                         // TODO: not support Nick anymore
                        if(user != null && user.getMUserNick() != null)
-                           username = user.getMUserNick();
+                           usernick = user.getMUserNick();
                     }
-
                     // First match against the whole ,non-splitted value
-                    if (username.startsWith(prefixString)) {
+                    if (username.contains(prefixString)||usernick.contains(prefixString)) {
                         newValues.add(value);
                     } else{
                           final String[] words = username.split(" ");
