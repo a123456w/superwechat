@@ -52,9 +52,9 @@ public class GroupPickContactsActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.em_activity_group_pick_contacts);
-
+		super.onCreate(savedInstanceState);
+		showTitleBarBack();
 		String groupId = getIntent().getStringExtra("groupId");
 		if (groupId == null) {// create new group
 			isCreatingNewGroup = true;
@@ -105,14 +105,19 @@ public class GroupPickContactsActivity extends BaseActivity {
 
 			}
 		});
+		setListener();
 	}
 
-	/**
-	 * save selected members
-	 * 
-	 * @param v
-	 */
-	public void save(View v) {
+	private void setListener() {
+		titleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				save();
+			}
+		});
+	}
+
+	public void save() {
 		List<String> var = getToBeAddMembers();
 		setResult(RESULT_OK, new Intent().putExtra("newmembers", var.toArray(new String[var.size()])));
 		finish();
