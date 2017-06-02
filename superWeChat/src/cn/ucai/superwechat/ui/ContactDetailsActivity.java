@@ -43,8 +43,9 @@ public class ContactDetailsActivity extends BaseActivity {
         showTitleBarBack();
     }
 
+    String userName;
     private void initData() {
-        String userName = getIntent().getStringExtra(I.User.USER_NAME);
+        userName = getIntent().getStringExtra(I.User.USER_NAME);
         if (userName != null) {
             user = SuperWeChatHelper.getInstance().getAppContactList().get(userName);
         }
@@ -80,6 +81,7 @@ public class ContactDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_send_msg:
+                MFGT.gotoChat(ContactDetailsActivity.this,userName);
                 break;
             case R.id.btn_send_video:
                 break;

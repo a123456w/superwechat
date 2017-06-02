@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.ui.AddContactsActivity;
+import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.ContactDetailsActivity;
 import cn.ucai.superwechat.ui.GuideActivity;
 import cn.ucai.superwechat.ui.LoginActivity;
@@ -77,5 +78,9 @@ public class MFGT {
 
     public static void gotoProfiles(Activity activity, String userName) {
         startActivity(activity,new Intent(activity,AddContactsActivity.class).putExtra(I.User.USER_NAME,userName));
+    }
+
+    public static void gotoChat(Activity activity, String userName) {
+        startActivity(activity,new Intent(activity,ChatActivity.class).putExtra("userId",userName));
     }
 }
