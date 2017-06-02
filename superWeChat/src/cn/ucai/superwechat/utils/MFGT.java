@@ -36,6 +36,10 @@ public class MFGT {
     public static void gotoMain(Activity activity) {
         startActivity(activity,MainActivity.class);
     }
+    public static void gotoMain(Activity activity,boolean isChat) {
+        startActivity(activity,new Intent(activity,MainActivity.class)
+        .putExtra(I.RESULT_CODE_IS_CHAT,isChat));
+    }
 
 
 

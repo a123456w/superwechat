@@ -54,6 +54,7 @@ import butterknife.ButterKnife;
 import cn.ucai.easeui.utils.EaseCommonUtils;
 import cn.ucai.redpacket.utils.RedPacketUtil;
 import cn.ucai.superwechat.Constant;
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.adapter.MainTabAdpter;
@@ -512,12 +513,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       /* String ggg = getIntent().getStringExtra("ggg");
-        if(ggg!=null){
-            layoutTabhost.setChecked(0);
-            notify();
-        }*/
-        layoutTabhost.setChecked(0);
         if (!isConflict && !isCurrentAccountRemoved) {
             updateUnreadLabel();
             updateUnreadAddressLable();
@@ -625,6 +620,11 @@ public class MainActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         showExceptionDialogFromIntent(intent);
+        boolean isChat = intent.getBooleanExtra(I.RESULT_CODE_IS_CHAT, false);
+        if(isChat){
+            layoutTabhost.setChecked(0);
+            layoutViewpage.setCurrentItem(0);
+        }
     }
 
     /**

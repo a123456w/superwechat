@@ -466,4 +466,9 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         //调用该方法可防止红包SDK引起的内存泄漏
         RPRedPacketUtil.getInstance().detachView();
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        MFGT.gotoMain(getActivity(),true);
+    }
 }
