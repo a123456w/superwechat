@@ -1,10 +1,13 @@
 package cn.ucai.superwechat.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.hyphenate.chat.EMClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,11 +49,16 @@ public class ContactDetailsActivity extends BaseActivity {
 
     private void initData() {
         String userName = getIntent().getStringExtra(I.User.USER_NAME);
+        Log.i("main","ContactDetailsActivity.initData.userName="+userName);
         if (userName != null) {
             user = SuperWeChatHelper.getInstance().getAppContactList().get(userName);
         }
         if (user == null) {
             user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
+        }
+        if(user==null&&userName.equals(EMClient.getInstance().getCurrentUser())){
+            user=SuperWeChatHelper.getInstance().getUserProfileManager().getCurrentAppUserInfo();
+            Log.i("main","ContactDetailsActivity.initData.user="+user);
         }
         if (user != null) {
             showView();
@@ -67,9 +75,11 @@ public class ContactDetailsActivity extends BaseActivity {
     }
 
     private void showButton(boolean isContact) {
-        btnAddContact.setVisibility(isContact ? View.GONE : View.VISIBLE);
-        btnSendMsg.setVisibility(isContact ? View.VISIBLE : View.GONE);
-        btnSendVideo.setVisibility(isContact ? View.VISIBLE : View.GONE);
+        if(!user.getMUserName().equals(EMClient.getInstance().getCurrentUser())){
+            btnAddContact.setVisibility(isContact ? View.GONE : View.VISIBLE);
+            btnSendMsg.setVisibility(isContact ? View.VISIBLE : View.GONE);
+            btnSendVideo.setVisibility(isContact ? View.VISIBLE : View.GONE);
+        }
     }
 
     @OnClick(R.id.btn_add_contact)
