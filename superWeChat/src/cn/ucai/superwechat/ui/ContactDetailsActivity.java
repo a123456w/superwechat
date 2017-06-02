@@ -81,9 +81,10 @@ public class ContactDetailsActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_send_msg:
-                MFGT.gotoChat(ContactDetailsActivity.this,userName);
+                MFGT.gotoChat(ContactDetailsActivity.this,user.getMUserName());
                 break;
             case R.id.btn_send_video:
+                MFGT.gotoVideo(ContactDetailsActivity.this,user.getMUserName());
                 break;
         }
     }

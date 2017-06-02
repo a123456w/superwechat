@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
+
+import com.hyphenate.chat.EMClient;
 
 import cn.ucai.easeui.domain.User;
 import cn.ucai.superwechat.I;
+import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.ui.AddContactsActivity;
 import cn.ucai.superwechat.ui.ChatActivity;
 import cn.ucai.superwechat.ui.ContactDetailsActivity;
@@ -17,6 +21,7 @@ import cn.ucai.superwechat.ui.RegisterActivity;
 import cn.ucai.superwechat.ui.SettingsActivity;
 import cn.ucai.superwechat.ui.SplashActivity;
 import cn.ucai.superwechat.ui.UserProfileActivity;
+import cn.ucai.superwechat.ui.VideoCallActivity;
 
 /**
  * Created by Administrator on 2017/5/19 0019.
@@ -82,5 +87,14 @@ public class MFGT {
 
     public static void gotoChat(Activity activity, String userName) {
         startActivity(activity,new Intent(activity,ChatActivity.class).putExtra("userId",userName));
+    }
+
+    public static void gotoVideo(Activity activity, String username) {
+        if (!EMClient.getInstance().isConnected())
+            Toast.makeText(activity, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+        else {
+            startActivity(activity,new Intent(activity, VideoCallActivity.class).putExtra("username", username)
+                    .putExtra("isComingCall", false));
+        }
     }
 }
