@@ -114,6 +114,7 @@
     <string name="group_name">Group name</string>
     <string name="Group_chat_profile">Group profile</string>
     <string name="Whether_the_public">Is public</string>
+    <string name="Group_avatar">Group avatar</string>
     <string name="Open_group_members_invited">Allow members to invite</string>
     <string name="Open_group_chat">Public groups</string>
     <string name="join_need_owner_approval">Join need group owner approval</string>

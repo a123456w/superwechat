@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 
+import cn.ucai.easeui.domain.Group;
 import cn.ucai.superwechat.Constant;
 
 import cn.ucai.superwechat.R;
@@ -39,10 +40,12 @@ import cn.ucai.superwechat.adapter.GroupAdapter;
 
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class GroupsActivity extends BaseActivity {
     public static final String TAG = "GroupsActivity";
+    private static final int CREATEA_NEW_GROUP = 1;
     private ListView groupListView;
     protected List<EMGroup> grouplist;
     private GroupAdapter groupAdapter;
@@ -112,7 +115,7 @@ public class GroupsActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
                     // create a new group
-                    startActivityForResult(new Intent(GroupsActivity.this, NewGroupActivity.class), 0);
+                    startActivityForResult(new Intent(GroupsActivity.this, NewGroupActivity.class), CREATEA_NEW_GROUP);
                 } else if (position == 2) {
                     // join a public group
                     startActivityForResult(new Intent(GroupsActivity.this, PublicGroupsActivity.class), 0);
@@ -143,8 +146,15 @@ public class GroupsActivity extends BaseActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override

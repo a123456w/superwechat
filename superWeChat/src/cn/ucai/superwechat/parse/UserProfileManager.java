@@ -279,4 +279,7 @@ public class UserProfileManager {
 		return PreferenceManager.getInstance().getCurrentUserAvatar();
 	}
 
+	public void uploadAppGroupAvatar(File file) {
+
+	}
 }

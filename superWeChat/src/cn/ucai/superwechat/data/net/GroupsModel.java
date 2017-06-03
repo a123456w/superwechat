@@ -23,6 +23,7 @@ public class GroupsModel implements IGroupsModel {
                 .addParam(I.Group.OWNER,owner)
                 .addParam(I.Group.IS_PUBLIC,String.valueOf(isPublic))
                 .addParam(I.Group.ALLOW_INVITES,String.valueOf(isInviets))
+                .addFile2(file)
                 .post()
                 .targetClass(String.class)
                 .execute(listener);
