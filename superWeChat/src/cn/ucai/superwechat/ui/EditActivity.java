@@ -14,10 +14,10 @@ public class EditActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
         setContentView(R.layout.em_activity_edit);
-
-        editText = (EditText) findViewById(R.id.edittext);
+        super.onCreate(arg0);
+        showTitleBarBack();
+        editText = (EditText)  findViewById(R.id.edittext);
         String title = getIntent().getStringExtra("title");
         String data = getIntent().getStringExtra("data");
         if (title != null)
@@ -25,11 +25,16 @@ public class EditActivity extends BaseActivity {
         if (data != null)
             editText.setText(data);
         editText.setSelection(editText.length());
-
+        titleBar.setRightLayoutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                save();
+            }
+        });
     }
 
 
-    public void save(View view) {
+    public void save() {
         setResult(RESULT_OK, new Intent().putExtra("data", editText.getText().toString()));
         finish();
     }
