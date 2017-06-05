@@ -182,7 +182,6 @@ public class NewGroupActivity extends BaseActivity {
     }
 
     private void newGroup(final Intent data) {
-        initDialog();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -215,13 +214,7 @@ public class NewGroupActivity extends BaseActivity {
         }).start();
     }
 
-    private void initDialog() {
-        String st1 = getResources().getString(R.string.Is_to_create_a_group_chat);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(st1);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-    }
+
 
     private void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -241,7 +234,6 @@ public class NewGroupActivity extends BaseActivity {
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
             file = saveBitmapFile(photo);
-            Log.i("main",file.toString());
             ivGroupAvatar.setImageBitmap(photo);
         }
 
@@ -296,48 +288,74 @@ public class NewGroupActivity extends BaseActivity {
     public void dismissDialog() {
         runOnUiThread(new Runnable() {
             public void run() {
-                if(progressDialog!=null&&progressDialog.isShowing()){
-                    progressDialog.dismiss();
-                }
                 setResult(RESULT_OK);
                 finish();
             }
         });
     }
     private void createGroups(final EMGroup groups,final String[] members) {
-
-        Log.e("main",file.toString());
-        model.createGroup(NewGroupActivity.this, groups.getGroupId(), groups.getGroupName()
-                , groups.getDescription(), groups.getOwner(), groups.isPublic(), groups.isAllowInvites()
-                , file, new OnCompleteListener<String>() {
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.e("main","NewGroupActivity.createGroups.s="+s);
-                        boolean isSuccess = false;
-                        if (s != null) {
-                            Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
-                            if (result != null && result.isRetMsg()) {
-                                isSuccess = true;
+        if (file != null) {
+            model.createGroup(NewGroupActivity.this, groups.getGroupId(), groups.getGroupName()
+                    , groups.getDescription(), groups.getOwner(), groups.isPublic(), groups.isAllowInvites()
+                    , file, new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            Log.e("main","NewGroupActivity.createGroups.s="+s);
+                            boolean isSuccess = false;
+                            if (s != null) {
+                                Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
+                                if (result != null && result.isRetMsg()) {
+                                    isSuccess = true;
+                                }
+                            }
+                            if (!isSuccess) {
+                                createFailes(null);
+                            }else {
+                                if(members!=null && members.length>0){
+                                    addGroup(members,groups.getGroupId());
+                                }else{
+                                    dismissDialog();
+                                }
                             }
                         }
-                        if (!isSuccess) {
+
+                        @Override
+                        public void onError(String error) {
                             createFailes(null);
-                        }else {
-                            if(members!=null && members.length>0){
-                                addGroup(members,groups.getGroupId());
-                            }else{
-                                dismissDialog();
+                        }
+                    });
+        }else{
+            model.createGroup(NewGroupActivity.this, groups.getGroupId(), groups.getGroupName()
+                    , groups.getDescription(), groups.getOwner(), groups.isPublic(), groups.isAllowInvites()
+                    , new OnCompleteListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            Log.e("main","NewGroupActivity.createGroups.s="+s);
+                            boolean isSuccess = false;
+                            if (s != null) {
+                                Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
+                                if (result != null && result.isRetMsg()) {
+                                    isSuccess = true;
+                                }
+                            }
+                            if (!isSuccess) {
+                                createFailes(null);
+                            }else {
+                                if(members!=null && members.length>0){
+                                    addGroup(members,groups.getGroupId());
+                                }else{
+                                    dismissDialog();
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(String error) {
-                        createFailes(null);
-                    }
-                });
+                        @Override
+                        public void onError(String error) {
+                            createFailes(null);
+                        }
+                    });
+        }
     }
-
     private void addGroup(String[] members, String groupId) {
 
         model.addGroupMembers(NewGroupActivity.this, StringByArrays(members), groupId,
