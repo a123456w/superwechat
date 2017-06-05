@@ -63,9 +63,10 @@ public class EaseUserUtils {
      * set user's nickname
      */
     public static void setAppUserNick(String username,TextView textView){
-        	User user = getAppUserInfo(username);
+        if(textView!=null){
+            User user = getAppUserInfo(username);
             setAppUserNick(user,textView);
-        Log.i("main","setAppUserNick.getAppUserInfo......user="+user+" //username="+username);
+        }
     }
     public static void setAppUserNick(User user,TextView textView){
         	if(user != null && user.getMUserNick() != null){
@@ -122,7 +123,7 @@ public class EaseUserUtils {
     public static String getAvatarPuth(String hxid){
         String puth = "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="
                 +hxid+"&avatarType=group_icon&m_avatar_suffix=" +
-                ".jpg&updatetime=";
+                ".jpg";
         return puth;
     }
     /**
