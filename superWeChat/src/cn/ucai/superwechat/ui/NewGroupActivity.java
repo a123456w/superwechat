@@ -202,8 +202,9 @@ public class NewGroupActivity extends BaseActivity {
                     } else {
                         option.style = memberCheckbox.isChecked() ? EMGroupStyle.EMGroupStylePrivateMemberCanInvite : EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
                     }
-                    EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-                    createGroups(group);
+                    EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName
+                            , desc, members, reason, option);
+                    createGroups(group,members);
 
 
                 } catch (final HyphenateException e) {
@@ -295,14 +296,15 @@ public class NewGroupActivity extends BaseActivity {
     public void dismissDialog() {
         runOnUiThread(new Runnable() {
             public void run() {
-                progressDialog.dismiss();
+                if(progressDialog!=null&&progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                }
                 setResult(RESULT_OK);
                 finish();
             }
         });
     }
-    Group group;
-    private void createGroups(final EMGroup groups) {
+    private void createGroups(final EMGroup groups,final String[] members) {
 
         Log.e("main",file.toString());
         model.createGroup(NewGroupActivity.this, groups.getGroupId(), groups.getGroupName()
@@ -316,15 +318,41 @@ public class NewGroupActivity extends BaseActivity {
                             Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
                             if (result != null && result.isRetMsg()) {
                                 isSuccess = true;
-                                dismissDialog();
-                                group = result.getRetData();
-                                if(group!=null){
-                                    setCodeorView(group);
-
-                                }
                             }
                         }
                         if (!isSuccess) {
+                            createFailes(null);
+                        }else {
+                            if(members!=null && members.length>0){
+                                addGroup(members,groups.getGroupId());
+                            }else{
+                                dismissDialog();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        createFailes(null);
+                    }
+                });
+    }
+
+    private void addGroup(String[] members, String groupId) {
+
+        model.addGroupMembers(NewGroupActivity.this, StringByArrays(members), groupId,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean isSuccess = false;
+                        if (s != null) {
+                            Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
+                            if (result != null && result.isRetMsg()) {
+                                isSuccess=true;
+                                dismissDialog();
+                            }
+                        }
+                        if (!isSuccess){
                             createFailes(null);
                         }
                     }
@@ -334,6 +362,15 @@ public class NewGroupActivity extends BaseActivity {
                         createFailes(null);
                     }
                 });
+    }
+
+    private String StringByArrays(String[] members) {
+        StringBuilder sb=new StringBuilder();
+        for (String member : members) {
+            sb.append(member);
+            sb.append(",");
+        }
+        return sb.toString();
     }
 
     private void setCodeorView(Group group) {

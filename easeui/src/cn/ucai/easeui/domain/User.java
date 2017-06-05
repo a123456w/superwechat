@@ -140,7 +140,10 @@ public class User implements Serializable {
 
 	public String getAvatar() {
 		if(mAvater==null){
-			mAvater = "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="+getMAvatarSuffix()+"&updatetime="+getMAvatarLastUpdateTime();
+			mAvater = "http://101.251.196.90:8080/SuperWeChatServerV2.0/downloadAvatar?name_or_hxid="
+					+getMUserName()+"&avatarType=user_avatar&m_avatar_suffix="
+					+getMAvatarSuffix()+"&updatetime="
+					+getMAvatarLastUpdateTime();
 		}
 		return mAvater;
 	}
