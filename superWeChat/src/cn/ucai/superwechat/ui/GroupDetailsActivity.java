@@ -46,6 +46,7 @@ import cn.ucai.easeui.widget.EaseAlertDialog;
 import cn.ucai.easeui.widget.EaseAlertDialog.AlertDialogUser;
 import cn.ucai.easeui.widget.EaseExpandGridView;
 import cn.ucai.easeui.widget.EaseSwitchButton;
+import cn.ucai.superwechat.utils.MFGT;
 
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -825,7 +826,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             button.setVisibility(View.VISIBLE);
             EaseUserUtils.setAppUserNick(username, holder.textView);
             EaseUserUtils.setAppUserAvatar(getContext(), username, holder.imageView);
-
+            holder.imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MFGT.gotoProfile(GroupDetailsActivity.this,username);
+                }
+            });
             LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
             id_background.setBackgroundColor(convertView.getResources().getColor(
                     position == 0 ? R.color.holo_red_light : R.color.holo_orange_light));
@@ -925,7 +931,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 final String username = getItem(position);
                 EaseUserUtils.setAppUserNick(username, holder.textView);
                 EaseUserUtils.setAppUserAvatar(getContext(), username, holder.imageView);
-
+                holder.imageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MFGT.gotoProfile(GroupDetailsActivity.this,username);
+                    }
+                });
                 LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
                 if (isInMuteList(username)) {
                     id_background.setBackgroundColor(convertView.getResources().getColor(R.color.gray_normal));
