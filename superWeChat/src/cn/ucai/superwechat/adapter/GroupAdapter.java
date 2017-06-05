@@ -25,9 +25,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.ucai.superwechat.R;
 
+import cn.ucai.easeui.utils.EaseUserUtils;
+import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.data.net.UserModel;
+
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.List;
 
@@ -36,12 +41,14 @@ public class GroupAdapter extends ArrayAdapter<EMGroup> {
 	private LayoutInflater inflater;
 	private String newGroup;
 	private String addPublicGroup;
+	List<EMGroup> groups;
 
 	public GroupAdapter(Context context, int res, List<EMGroup> groups) {
 		super(context, res, groups);
 		this.inflater = LayoutInflater.from(context);
 		newGroup = context.getResources().getString(R.string.The_new_group_chat);
 		addPublicGroup = context.getResources().getString(R.string.add_public_group_chat);
+		this.groups=groups;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class GroupAdapter extends ArrayAdapter<EMGroup> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (getItemViewType(position) == 0) {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.em_search_bar_with_padding, parent, false);
@@ -102,7 +109,8 @@ public class GroupAdapter extends ArrayAdapter<EMGroup> {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.em_row_add_group, parent, false);
 			}
-			((ImageView) convertView.findViewById(R.id.avatar)).setImageResource(R.drawable.em_add_public_group);
+			((ImageView) convertView.findViewById(R.id.avatar))
+					.setImageResource(R.drawable.em_add_public_group);
 			((TextView) convertView.findViewById(R.id.name)).setText(addPublicGroup);
 			((TextView) convertView.findViewById(R.id.header)).setVisibility(View.VISIBLE);
 
@@ -111,7 +119,8 @@ public class GroupAdapter extends ArrayAdapter<EMGroup> {
 				convertView = inflater.inflate(R.layout.em_row_group, parent, false);
 			}
 			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position - 3).getGroupName());
-
+			EaseUserUtils.setGroupAvatarByhxid(getContext(), getItem(position - 3).getGroupId()
+					, (ImageView) convertView.findViewById(R.id.avatar));
 		}
 
 		return convertView;

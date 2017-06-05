@@ -59,6 +59,7 @@ import cn.ucai.superwechat.data.Result;
 import cn.ucai.superwechat.data.net.GroupsModel;
 import cn.ucai.superwechat.data.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.PreferenceManager;
 import cn.ucai.superwechat.utils.ResultUtils;
 
 public class NewGroupActivity extends BaseActivity {
@@ -238,9 +239,6 @@ public class NewGroupActivity extends BaseActivity {
         Bundle extras = data.getExtras();
         if (extras != null) {
             Bitmap photo = extras.getParcelable("data");
-          /*  Drawable drawable = new BitmapDrawable(getResources(), photo);
-            ivUserinfoAvatar.setImageDrawable(drawable);
-            uploadUserAvatar(Bitmap2Bytes(photo));*/
             file = saveBitmapFile(photo);
             Log.i("main",file.toString());
             ivGroupAvatar.setImageBitmap(photo);
@@ -303,24 +301,26 @@ public class NewGroupActivity extends BaseActivity {
             }
         });
     }
-    Group group1;
-    private void createGroups(final EMGroup group) {
+    Group group;
+    private void createGroups(final EMGroup groups) {
 
         Log.e("main",file.toString());
-        model.createGroup(NewGroupActivity.this, group.getGroupId(), group.getGroupName()
-                , group.getDescription(), group.getOwner(), group.isPublic(), group.isAllowInvites()
+        model.createGroup(NewGroupActivity.this, groups.getGroupId(), groups.getGroupName()
+                , groups.getDescription(), groups.getOwner(), groups.isPublic(), groups.isAllowInvites()
                 , file, new OnCompleteListener<String>() {
                     @Override
                     public void onSuccess(String s) {
+                        Log.e("main","NewGroupActivity.createGroups.s="+s);
                         boolean isSuccess = false;
                         if (s != null) {
                             Result<Group> result = ResultUtils.getResultFromJson(s, Group.class);
                             if (result != null && result.isRetMsg()) {
                                 isSuccess = true;
                                 dismissDialog();
-                                group1 = result.getRetData();
-                                if(group1!=null){
-                                    setCodeorView(group1);
+                                group = result.getRetData();
+                                if(group!=null){
+                                    setCodeorView(group);
+
                                 }
                             }
                         }
@@ -336,8 +336,12 @@ public class NewGroupActivity extends BaseActivity {
                 });
     }
 
-    private void setCodeorView(Group group1) {
+    private void setCodeorView(Group group) {
+        String avatar = group.getAvatar();
 
+    }
+    private void setCurrentAppUserAvatar(String avatar) {
+        PreferenceManager.getInstance().setCurrentUserAvatar(avatar);
     }
 
 

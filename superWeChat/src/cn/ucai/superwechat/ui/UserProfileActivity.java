@@ -102,8 +102,9 @@ public class UserProfileActivity extends BaseActivity  {
         IntentFilter filter = new IntentFilter(I.BROADCAST_UPDATE_AVATAR);
         registerReceiver(mReceiver,filter);
     }
-    public void asyncFetchUserInfo(String username) {
-        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<EaseUser>() {
+    /*public void asyncFetchUserInfo(String username) {
+        SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username
+                , new EMValueCallBack<EaseUser>() {
 
             @Override
             public void onSuccess(EaseUser user) {
@@ -125,7 +126,7 @@ public class UserProfileActivity extends BaseActivity  {
             public void onError(int error, String errorMsg) {
             }
         });
-    }
+    }*/
 
 
     private void uploadHeadPhoto() {
