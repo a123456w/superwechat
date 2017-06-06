@@ -69,7 +69,7 @@ public class GroupsModel implements IGroupsModel {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_ADD_GROUP_MEMBER)
                 .addParam(I.Member.USER_NAME,username)
-                .addParam(I.Member.GROUP_ID,hxid)
+                .addParam(I.Member.GROUP_HX_ID,hxid)
                 .targetClass(String.class)
                 .execute(listener);
     }

@@ -268,7 +268,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     final String[] newmembers = data.getStringArrayExtra("newmembers");
                     progressDialog.setMessage(st1);
                     progressDialog.show();
-                    AddAppMemberToGroup(newmembers);
                     addMembersToGroup(newmembers);
                     break;
                 case REQUEST_CODE_EXIT: // 退出群
@@ -426,7 +425,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     }
 
     private void AddAppMemberToGroup(String[] newmembers) {
-        model.addGroupUser(GroupDetailsActivity.this, newmembers[0], groupId,
+        StringBuilder sb=new StringBuilder();
+        for (String newmember : newmembers) {
+            sb.append(newmember).append(",");
+        }
+        Log.i("main","groupId；"+groupId);
+        model.addGroupUser(GroupDetailsActivity.this, sb.toString(), groupId,
                 new OnCompleteListener<String>() {
                     @Override
                     public void onSuccess(String s) {
@@ -622,6 +626,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         // 一般成员调用invite方法
                         EMClient.getInstance().groupManager().inviteUser(groupId, newmembers, null);
                     }
+                    AddAppMemberToGroup(newmembers);
                     updateGroup();
                     refreshMembersAdapter();
                     runOnUiThread(new Runnable() {
