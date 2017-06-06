@@ -19,4 +19,7 @@ public interface IGroupsModel {
             , OnCompleteListener<String> listener);
     void addGroupMembers(Context context, String usernames, String hxid, OnCompleteListener<String> listener);
     void updateGroupName(Context context, String hxid, String groupname, OnCompleteListener<String> listener);
+    void addGroupUser(Context context, String username, String hxid, OnCompleteListener<String> listener);
+    void removeMemberGroup(Context context, String hxid, String username, OnCompleteListener<String> listener);
+    void removeGroup(Context context, String hxid , OnCompleteListener<String> listener);
 }
