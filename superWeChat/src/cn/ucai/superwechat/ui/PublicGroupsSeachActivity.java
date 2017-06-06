@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+
+import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.superwechat.R;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -21,24 +24,31 @@ public class PublicGroupsSeachActivity extends BaseActivity{
     private EditText idET;
     private TextView nameText;
     public static EMGroup searchedGroup;
+    ImageView avatar;
 
     @Override
     protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
         setContentView(R.layout.em_activity_public_groups_search);
-        
+        super.onCreate(arg0);
+        showTitleBarBack();
+        setListener();
         containerLayout = (RelativeLayout) findViewById(R.id.rl_searched_group);
+        avatar=(ImageView)findViewById(R.id.avatar) ;
         idET = (EditText) findViewById(R.id.et_search_id);
         nameText = (TextView) findViewById(R.id.name);
-        
         searchedGroup = null;
     }
-    
-    /**
-     * search group with group id
-     * @param v
-     */
-    public void searchGroup(View v){
+
+    private void setListener() {
+        titleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchGroup();
+            }
+        });
+    }
+
+    public void searchGroup(){
         if(TextUtils.isEmpty(idET.getText())){
             return;
         }
@@ -58,6 +68,8 @@ public class PublicGroupsSeachActivity extends BaseActivity{
                             pd.dismiss();
                             containerLayout.setVisibility(View.VISIBLE);
                             nameText.setText(searchedGroup.getGroupName());
+                            EaseUserUtils.setGroupAvatarByhxid(PublicGroupsSeachActivity.this,
+                                    searchedGroup.getGroupId(),avatar);
                         }
                     });
                     
