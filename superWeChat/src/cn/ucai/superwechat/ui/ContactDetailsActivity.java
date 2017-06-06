@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,7 +19,12 @@ import cn.ucai.easeui.utils.EaseUserUtils;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.data.net.UserModel;
+import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 /**
  * Created by Administrator on 2017/5/25 0025.
@@ -36,23 +43,29 @@ public class ContactDetailsActivity extends BaseActivity {
     @BindView(R.id.btn_send_video)
     Button btnSendVideo;
     User user;
+    UserModel model;
 
     @Override
     protected void onCreate(Bundle arg0) {
         setContentView(R.layout.activity_contact_details);
         ButterKnife.bind(this);
         super.onCreate(arg0);
+        model=new UserModel();
         initData();
         showTitleBarBack();
     }
 
-
+    String userName;
     private void initData() {
-        String userName = getIntent().getStringExtra(I.User.USER_NAME);
+        userName = getIntent().getStringExtra(I.User.USER_NAME);
         Log.i("main","ContactDetailsActivity.initData.userName="+userName);
         if (userName != null) {
             user = SuperWeChatHelper.getInstance().getAppContactList().get(userName);
         }
+        if(userName != null&&!userName.equals(EMClient.getInstance().getCurrentUser())){
+            syncUserInfo();
+        }
+
         if (user == null) {
             user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
         }
@@ -62,7 +75,8 @@ public class ContactDetailsActivity extends BaseActivity {
         }
         if (user != null) {
             showView();
-        } else {
+
+        } else if(userName==null){
             finish();
         }
     }
@@ -85,6 +99,53 @@ public class ContactDetailsActivity extends BaseActivity {
     @OnClick(R.id.btn_add_contact)
     public void onViewClicked() {
         MFGT.gotoProfiles(ContactDetailsActivity.this, user.getMUserName());
+    }
+    public void syncUserInfo(){
+        model.loadUserInfo(ContactDetailsActivity.this, userName,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.i("main","ContactDetailsActivity." +
+                                "syncUserInfo.onSuccess:"+s);
+                        boolean isSuccess=false;
+                        if (s!=null){
+                            Result<User> result = ResultUtils.getResultFromJson(s, User.class);
+                            Log.i("main","ContactDetailsActivity." +
+                                    "syncUserInfo.result.isRetMsg:"+result.isRetMsg());
+                            if(result!=null&&result.isRetMsg()){
+                                user=result.getRetData();
+                                isSuccess=true;
+                            }
+                        }
+                        if(!isSuccess){
+                            showUser();
+                        }else{
+                            showView();
+                            saveUser2db();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        showUser();
+                    }
+                });
+    }
+
+    private void saveUser2db() {
+
+        UserDao userDao=new UserDao(ContactDetailsActivity.this);
+        Map<String, User> appContactList = userDao.getAppContactList();
+        if(appContactList.containsKey(user.getMUserName())){
+            userDao.saveAppContact(user);
+            SuperWeChatHelper.getInstance().getAppContactList().put(user.getMUserName(),user);
+        }
+    }
+
+    private void showUser() {
+        tvUserinfoName.setText(userName);
+        EaseUserUtils.setAppUserNick(userName, tvUserinfoNick);
+        EaseUserUtils.setAppUserAvatar(ContactDetailsActivity.this, userName, profileImage);
     }
 
     @OnClick({R.id.btn_send_msg, R.id.btn_send_video})

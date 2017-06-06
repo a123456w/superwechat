@@ -18,4 +18,5 @@ public interface IGroupsModel {
                      boolean isPublic, boolean isInviets
             , OnCompleteListener<String> listener);
     void addGroupMembers(Context context, String usernames, String hxid, OnCompleteListener<String> listener);
+    void updateGroupName(Context context, String hxid, String groupname, OnCompleteListener<String> listener);
 }

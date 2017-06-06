@@ -46,7 +46,12 @@ import cn.ucai.easeui.widget.EaseAlertDialog;
 import cn.ucai.easeui.widget.EaseAlertDialog.AlertDialogUser;
 import cn.ucai.easeui.widget.EaseExpandGridView;
 import cn.ucai.easeui.widget.EaseSwitchButton;
+import cn.ucai.superwechat.data.Result;
+import cn.ucai.superwechat.data.net.GroupsModel;
+import cn.ucai.superwechat.data.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -90,13 +95,14 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
     private List<String> blackList = Collections.synchronizedList(new ArrayList<String>());
 
     GroupChangeListener groupChangeListener;
+    GroupsModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.em_activity_group_details);
         super.onCreate(savedInstanceState);
         showTitleBarBack();
-
+        model=new GroupsModel();
         groupId = getIntent().getStringExtra("groupId");
         group = EMClient.getInstance().groupManager().getGroup(groupId);
 
@@ -282,13 +288,31 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                             public void run() {
                                 try {
                                     EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
-                                    runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount() + st);
-                                            progressDialog.dismiss();
-                                            Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                    model.updateGroupName(GroupDetailsActivity.this, groupId, returnData,
+                                            new OnCompleteListener<String>() {
+                                                @Override
+                                                public void onSuccess(String s) {
+                                                    boolean isSuccess=false;
+                                                    if(s!=null){
+                                                        Result result = ResultUtils.getResultFromJson(s,String.class);
+                                                        if (result!=null&&result.isRetMsg()){
+                                                            isSuccess=true;
+                                                            isSuccess(st6);
+                                                        }
+                                                    }
+                                                    if(!isSuccess){
+                                                        CommonUtils.showShortToast("修改失敗");
+                                                        progressDialog.dismiss();
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onError(String error) {
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+
 
                                 } catch (HyphenateException e) {
                                     e.printStackTrace();
@@ -337,6 +361,16 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     break;
             }
         }
+    }
+
+    private void isSuccess(final String st6) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                titleBar.setTitle(group.getGroupName() + "(" + group.getMemberCount() + st);
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), st6, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void refreshOwnerAdminAdapter() {
