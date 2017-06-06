@@ -275,11 +275,12 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     progressDialog.setMessage(st2);
                     progressDialog.show();
                     exitGrop();
-
+                    
                     break;
                 case REQUEST_CODE_EXIT_DELETE: // 解散群
                     progressDialog.setMessage(st3);
                     progressDialog.show();
+                    deleteAppGroup();
                     deleteGrop();
 
                     break;
@@ -342,6 +343,31 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     break;
             }
         }
+    }
+
+    private void deleteAppGroup() {
+        final String st5 = getResources().getString(R.string.Dissolve_group_chat_tofail);
+        model.removeGroup(GroupDetailsActivity.this, groupId, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                boolean isSuccess=false;
+                if(s!=null){
+                    Result result = ResultUtils.getResultFromJson(s,Group.class);
+                    if (result!=null&&result.isRetMsg()){
+                        isSuccess=true;
+                    }
+                }
+                if(!isSuccess){
+                    progressDialog.dismiss();
+                    isSuccess(st5);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                isSuccess(st5);
+            }
+        });
     }
 
     private void updataAppGroupName(String returnData, final String st6) {
