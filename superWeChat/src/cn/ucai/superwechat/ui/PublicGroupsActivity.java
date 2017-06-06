@@ -55,18 +55,18 @@ public class PublicGroupsActivity extends BaseActivity {
     private LinearLayout footLoadingLayout;
     private ProgressBar footLoadingPB;
     private TextView footLoadingText;
-    private Button searchBtn;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_public_groups);
+        super.onCreate(savedInstanceState);
+        showTitleBarBack();
+        titleBar.getRightLayout().setVisibility(View.INVISIBLE);
 
         pb = (ProgressBar) findViewById(R.id.progressBar);
         listView = (ListView) findViewById(R.id.list);
         groupsList = new ArrayList<EMGroupInfo>();
-        searchBtn = (Button) findViewById(R.id.btn_search);
 
         View footView = getLayoutInflater().inflate(R.layout.em_listview_footer_view, listView, false);
         footLoadingLayout = (LinearLayout) footView.findViewById(R.id.loading_layout);
@@ -76,6 +76,7 @@ public class PublicGroupsActivity extends BaseActivity {
         footLoadingLayout.setVisibility(View.GONE);
 
         loadAndShowData();
+        setListener();
 
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -107,8 +108,13 @@ public class PublicGroupsActivity extends BaseActivity {
 
     }
 
-    public void search(View view) {
-        startActivity(new Intent(this, PublicGroupsSeachActivity.class));
+    private void setListener() {
+        titleBar.getRightLayout().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PublicGroupsActivity.this, PublicGroupsSeachActivity.class));
+            }
+        });
     }
 
     private void loadAndShowData() {
@@ -122,7 +128,7 @@ public class PublicGroupsActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
 
                         public void run() {
-                            searchBtn.setVisibility(View.VISIBLE);
+                            titleBar.getRightLayout().setVisibility(View.VISIBLE);
                             groupsList.addAll(returnGroups);
                             if (returnGroups.size() != 0) {
                                 cursor = result.getCursor();

@@ -2,26 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/common_bg"
     android:orientation="vertical">
-
-    <RelativeLayout
+    <cn.ucai.easeui.widget.EaseTitleBar
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_top_bar"
-        android:background="@color/top_bar_normal_bg"
-        android:gravity="center_vertical">
-
-        <include layout="@layout/ease_commom_back_btn" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/Open_group_chat"
-            android:textColor="@color/bottom_text_color_normal"
-            android:textSize="18sp" />
-
+        android:layout_height="wrap_content"
+        app:titleBarLeftImage="@drawable/icon_back"
+        app:rightText="@string/search"
+        app:titleBarTitle="@string/Open_group_chat">
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="26dp"
@@ -29,20 +19,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="7dp" />
-
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/ease_common_tab_bg"
-            android:textColor="#fff"
-            android:text="@string/search"
-            android:onClick="search"
-            android:layout_alignParentRight="true"
-            android:textSize="16sp"
-            android:visibility="invisible" />
-
-    </RelativeLayout>
+    </cn.ucai.easeui.widget.EaseTitleBar>
 
     <include
         android:id="@+id/search_bar_view"
