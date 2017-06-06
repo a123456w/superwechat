@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +39,8 @@ import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPushConfigs;
+
+import cn.ucai.easeui.domain.Group;
 import cn.ucai.superwechat.R;
 
 import cn.ucai.easeui.ui.EaseGroupListener;
@@ -265,17 +268,20 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     final String[] newmembers = data.getStringArrayExtra("newmembers");
                     progressDialog.setMessage(st1);
                     progressDialog.show();
+                    AddAppMemberToGroup(newmembers);
                     addMembersToGroup(newmembers);
                     break;
                 case REQUEST_CODE_EXIT: // 退出群
                     progressDialog.setMessage(st2);
                     progressDialog.show();
                     exitGrop();
+
                     break;
                 case REQUEST_CODE_EXIT_DELETE: // 解散群
                     progressDialog.setMessage(st3);
                     progressDialog.show();
                     deleteGrop();
+
                     break;
 
                 case REQUEST_CODE_EDIT_GROUPNAME: //修改群名称
@@ -287,33 +293,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         new Thread(new Runnable() {
                             public void run() {
                                 try {
+                                    updataAppGroupName(returnData, st6);
                                     EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
-                                    model.updateGroupName(GroupDetailsActivity.this, groupId, returnData,
-                                            new OnCompleteListener<String>() {
-                                                @Override
-                                                public void onSuccess(String s) {
-                                                    boolean isSuccess=false;
-                                                    if(s!=null){
-                                                        Result result = ResultUtils.getResultFromJson(s,String.class);
-                                                        if (result!=null&&result.isRetMsg()){
-                                                            isSuccess=true;
-                                                            isSuccess(st6);
-                                                        }
-                                                    }
-                                                    if(!isSuccess){
-                                                        CommonUtils.showShortToast("修改失敗");
-                                                        progressDialog.dismiss();
-                                                    }
-
-                                                }
-
-                                                @Override
-                                                public void onError(String error) {
-                                                    progressDialog.dismiss();
-                                                }
-                                            });
-
-
                                 } catch (HyphenateException e) {
                                     e.printStackTrace();
                                     runOnUiThread(new Runnable() {
@@ -361,6 +342,58 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     break;
             }
         }
+    }
+
+    private void updataAppGroupName(String returnData, final String st6) {
+        model.updateGroupName(GroupDetailsActivity.this, groupId, returnData,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean isSuccess=false;
+                        if(s!=null){
+                            Result result = ResultUtils.getResultFromJson(s,Group.class);
+                            if (result!=null&&result.isRetMsg()){
+                                isSuccess=true;
+                            }
+                        }
+                        if(!isSuccess){
+                            progressDialog.dismiss();
+                        }else{
+                            isSuccess(st6);
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressDialog.dismiss();
+                        CommonUtils.showShortToast("修改失敗E");
+                    }
+                });
+    }
+
+    private void AddAppMemberToGroup(String[] newmembers) {
+        model.addGroupUser(GroupDetailsActivity.this, newmembers[0], groupId,
+                new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean isSuccess=false;
+                        if(s!=null){
+                            Result result = ResultUtils.getResultFromJson(s, Group.class);
+                            if(result!=null&&result.isRetMsg()){
+                                isSuccess=true;
+                            }
+                        }
+                        if(!isSuccess){
+                            CommonUtils.showShortToast("添加失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        CommonUtils.showShortToast("添加失败");
+                    }
+                });
     }
 
     private void isSuccess(final String st6) {
@@ -466,15 +499,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             public void run() {
                 try {
                     EMClient.getInstance().groupManager().leaveGroup(groupId);
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            setResult(RESULT_OK);
-                            finish();
-                            if (ChatActivity.activityInstance != null)
-                                ChatActivity.activityInstance.finish();
-                        }
-                    });
+                    removeOk();
                 } catch (final Exception e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -487,6 +512,18 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
         }).start();
     }
 
+    private void removeOk() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+                setResult(RESULT_OK);
+                finish();
+                if (ChatActivity.activityInstance != null)
+                    ChatActivity.activityInstance.finish();
+            }
+        });
+    }
+
     /**
      * 解散群组
      *
@@ -497,25 +534,21 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             public void run() {
                 try {
                     EMClient.getInstance().groupManager().destroyGroup(groupId);
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            setResult(RESULT_OK);
-                            finish();
-                            if (ChatActivity.activityInstance != null)
-                                ChatActivity.activityInstance.finish();
-                        }
-                    });
+                    removeOk();
                 } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), st5 + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    removeError(e.getMessage(), st5);
                 }
             }
         }).start();
+    }
+
+    private void removeError(final String e, final String st5) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+                Toast.makeText(getApplicationContext(), st5 + e, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
@@ -545,12 +578,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         }
                     });
                 } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), st6 + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    removeError(e.getMessage(), st6);
                 }
             }
         }).start();
@@ -860,23 +888,23 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             button.setVisibility(View.VISIBLE);
             EaseUserUtils.setAppUserNick(username, holder.textView);
             EaseUserUtils.setAppUserAvatar(getContext(), username, holder.imageView);
-            holder.imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MFGT.gotoProfile(GroupDetailsActivity.this,username);
-                }
-            });
             LinearLayout id_background = (LinearLayout) convertView.findViewById(R.id.l_bg_id);
             id_background.setBackgroundColor(convertView.getResources().getColor(
                     position == 0 ? R.color.holo_red_light : R.color.holo_orange_light));
             button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MFGT.gotoProfile(GroupDetailsActivity.this,username);
+                }
+            });
+            button.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
                     if (!isCurrentOwner(group)) {
-                        return;
+                        return false;
                     }
                     if (username.equals(group.getOwner())) {
-                        return;
+                        return false;
                     }
                     operationUserId = username;
                     Dialog dialog = createMemberMenuDialog();
@@ -897,6 +925,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    return true;
                 }
             });
             return convertView;
@@ -979,12 +1008,17 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 } else {
                     id_background.setBackgroundColor(convertView.getResources().getColor(R.color.holo_blue_bright));
                 }
-
                 button.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        MFGT.gotoProfile(GroupDetailsActivity.this,username);
+                    }
+                });
+                button.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
                         if (!isCurrentOwner(group) && !isCurrentAdmin(group)) {
-                            return;
+                            return false;
                         }
                         operationUserId = username;
                         Dialog dialog = createMemberMenuDialog();
@@ -1036,7 +1070,9 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        return false;
                     }
+
                 });
             }
 

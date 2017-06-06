@@ -57,8 +57,8 @@ public class GroupsModel implements IGroupsModel {
     @Override
     public void updateGroupName(Context context, String hxid, String groupname, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils = new OkHttpUtils<>(context);
-        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
-                .addParam(I.Group.GROUP_ID,hxid)
+        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME_BY_HXID)
+                .addParam(I.Group.HX_ID,hxid)
                 .addParam(I.Group.NAME,groupname)
                 .targetClass(String.class)
                 .execute(listener);
