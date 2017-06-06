@@ -430,7 +430,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
             sb.append(newmember).append(",");
         }
         Log.i("main","groupId；"+groupId);
-        model.addGroupUser(GroupDetailsActivity.this, sb.toString(), groupId,
+        model.addGroupMembers(GroupDetailsActivity.this, sb.toString(), groupId,
                 new OnCompleteListener<String>() {
                     @Override
                     public void onSuccess(String s) {
