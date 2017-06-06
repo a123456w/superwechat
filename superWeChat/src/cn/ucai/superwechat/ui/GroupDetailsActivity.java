@@ -274,8 +274,8 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                 case REQUEST_CODE_EXIT: // 退出群
                     progressDialog.setMessage(st2);
                     progressDialog.show();
+                    exitAppGroup();
                     exitGrop();
-                    
                     break;
                 case REQUEST_CODE_EXIT_DELETE: // 解散群
                     progressDialog.setMessage(st3);
@@ -343,6 +343,33 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
                     break;
             }
         }
+    }
+
+    private void exitAppGroup() {
+        final String st1 = getResources().getString(R.string.Exit_the_group_chat_failure);
+        model.removeMemberGroup(GroupDetailsActivity.this, groupId, EMClient.getInstance().getCurrentUser()
+                , new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        boolean isSuccess=false;
+                        if(s!=null){
+                            Result result = ResultUtils.getResultFromJson(s,Group.class);
+                            if (result!=null&&result.isRetMsg()){
+                                isSuccess=true;
+                            }
+                        }
+                        if(!isSuccess){
+                            progressDialog.dismiss();
+                            isSuccess(st1);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressDialog.dismiss();
+                        isSuccess(st1);
+                    }
+                });
     }
 
     private void deleteAppGroup() {
